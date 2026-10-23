@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Brochure Investi con Widiba – personalizza</title>
+<style>
+@font-face{font-family:Widiba;src:url(fonts/Widiba-Light.ttf);font-weight:300}
+@font-face{font-family:Widiba;src:url(fonts/Widiba-Regular.ttf);font-weight:400}
+@font-face{font-family:Widiba;src:url(fonts/Widiba-Medium.ttf);font-weight:500 700}
+:root{--pink:#D03F65;--ink:#6A4649;--bg:#F5F0EA;--card:#FBFAF7;--line:#CBC2C0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Widiba,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-weight:300;font-size:28px;line-height:1.15;margin:8px 0 6px}
+h1 b{color:var(--pink);font-weight:500}
+p.lead{margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+label{display:block;font-weight:500;margin-bottom:6px}
+.row{display:flex;gap:8px}
+input{flex:1;min-width:0;font:inherit;padding:13px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus{outline:2px solid var(--pink);outline-offset:0}
+button{font:inherit;font-weight:500;padding:13px 18px;border:0;border-radius:10px;background:var(--pink);color:#fff;cursor:pointer}
+button.sec{background:#fff;color:var(--pink);border:1px solid var(--pink)}
+button:disabled{opacity:.5}
+.hint{font-size:13px;opacity:.8;margin-top:8px}
+.err{color:#8a1c2b;margin-top:12px}.err a{color:var(--pink)}.warn{background:#fff3cd;border-radius:10px;padding:10px 12px;margin-top:12px;font-size:14px}
+#res{display:none;margin-top:18px}
+.url{word-break:break-all;font-weight:500;color:var(--pink)}
+.prev{display:block;width:100%;border:1px solid var(--line);border-radius:8px;margin:14px 0;background:#fff}
+.btns{display:grid;gap:10px;margin-top:6px}
+.small{font-size:13px;opacity:.75;margin-top:14px}
+</style></head><body style="font-synthesis:none"><main>
+<h1>Brochure <b>Investi con Widiba</b><br>con il tuo QR code</h1>
+<p class="lead">Inserisci la tua email Widiba: il QR code porterà i tuoi clienti alla pagina dell'iniziativa sul tuo sito personale.</p>
+<div class="card">
+  <label for="em">La tua email Widiba</label>
+  <div class="row"><input id="em" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="nome.cognome@pfwidiba.it"><button id="go">Genera</button></div>
+  <div class="hint">Va bene sia @pfwidiba.it sia @cfwidiba.it.</div>
+  <div id="msg"></div>
+</div>
+<div id="res" class="card">
+  <div>Il QR punta a:</div><div class="url" id="url"></div>
+  <img id="prev" class="prev" alt="Anteprima brochure">
+  <div class="btns">
+    <button id="bWa">Invia il link su WhatsApp</button>
+    <button id="bCopy" class="sec">Copia il link</button>
+    <button id="bPdf">Scarica PDF</button>
+    <button id="bImgs" class="sec">Salva / condividi come 2 immagini</button>
+    <button id="bLong" class="sec">Salva / condividi come immagine unica</button>
+  </div>
+  <div class="small">Il PDF è cliccabile: QR e scritta aprono il tuo sito. Da smartphone, nel menu di condivisione scegli WhatsApp, Mail o "Salva immagine".</div>
+</div>
+</main>
+<script src="lib/pdf-lib.min.js"></script><script src="lib/fontkit.umd.min.js"></script><script src="lib/qrcode.js"></script><script src="lib/pdf.min.js"></script><script src="common.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let cfg=null, cur=null;
+async function loadCfg(){ if(!cfg) cfg=await (await getFile('cf.json',{cache:'no-cache'})).json(); return cfg; }
+function say(t,cls){ $('msg').innerHTML = t?`<div class="${cls||'err'}">${t}</div>`:''; }
+
+$('go').onclick = async ()=>{
+  say(''); $('res').style.display='none'; $('go').disabled=true;
+  try{
+    const c = await loadCfg();
+    const p = parseEmail($('em').value, c.domains);
+    if(!p) return say('Controlla l\'email: scrivi ad es. nome.cognome@pfwidiba.it');
+    if(p.bad) return say('Dominio non valido: usa @pfwidiba.it oppure @cfwidiba.it');
+    const it = c.items[await keyOf(c.salt,p.local)];
+    if(!it) return say('Ciao, non ci risulta un sito Widiba attivo sulla tua utenza. Controlla l\'indirizzo email inserito. Se non hai ancora richiesto il sito Widiba, o se l\'hai richiesto ma non l\'hai ancora attivato, scrivi a <a href="mailto:comunicazionerete@widiba.it?subject=Richiesta attivazione sito Widiba">comunicazionerete@widiba.it</a> chiedendo l\'attivazione.<br><br>In caso contrario <a href="brochure.pdf" download="Investi_con_Widiba.pdf"><b>scarica la brochure generica</b></a>.');
+    const url = it.u.replace(/\/+$/,'') + '/' + c.page;
+    const pdf = await makePdf(url, it.u);
+    const cv = await pdfToCanvases(pdf, 2.2);
+    cur = {pdf, cv, url};
+    $('url').textContent = url;
+    $('prev').src = cv[0].toDataURL('image/jpeg',0.85);
+    $('res').style.display='block';
+    if(it.m) say('Il tuo sito risulta in "Modalità manutenzione": controlla che la pagina sia online prima di condividere la brochure.','warn');
+    $('res').scrollIntoView({behavior:'smooth'});
+  }catch(e){ console.error(e); say('Errore imprevisto: '+e.message); }
+  finally{ $('go').disabled=false; }
+};
+$('em').addEventListener('keydown',e=>{ if(e.key==='Enter') $('go').click(); });
+
+async function out(files){
+  try{
+    if(navigator.canShare && navigator.canShare({files})){ await navigator.share({files}); return; }
+  }catch(e){ if(e.name==='AbortError') return; }
+  for(const f of files){ const a=document.createElement('a'); a.href=URL.createObjectURL(f); a.download=f.name; document.body.appendChild(a); a.click(); a.remove(); await new Promise(r=>setTimeout(r,400)); }
+}
+$('bCopy').onclick = async ()=>{
+  try{ await navigator.clipboard.writeText(cur.url); }
+  catch(e){ const t=document.createElement('textarea'); t.value=cur.url; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  $('bCopy').textContent='Link copiato ✓'; setTimeout(()=>$('bCopy').textContent='Copia il link',2000);
+};
+$('bWa').onclick = ()=> window.open('https://wa.me/?text='+encodeURIComponent(cur.url),'_blank');
+$('bPdf').onclick = ()=> out([new File([cur.pdf],'Investi_con_Widiba.pdf',{type:'application/pdf'})]);
+$('bImgs').onclick = async ()=> out(await Promise.all(cur.cv.map(async(c,i)=>new File([await toBlob(c)],`Investi_con_Widiba_${i+1}.png`,{type:'image/png'}))));
+$('bLong').onclick = async ()=>{
+  const w=cur.cv[0].width, h=cur.cv.reduce((s,c)=>s+c.height,0), L=document.createElement('canvas'); L.width=w; L.height=h;
+  const x=L.getContext('2d'); let y=0; for(const c of cur.cv){ x.drawImage(c,0,y); y+=c.height; }
+  out([new File([await toBlob(L)],'Investi_con_Widiba_unica.png',{type:'image/png'})]);
+};
+</script></body></html>

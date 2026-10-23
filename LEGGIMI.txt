@@ -1,0 +1,11 @@
+TOOL BROCHURE INVESTI CON WIDIBA
+File nella stessa cartella del repository GitHub (tutti insieme, come sono):
+ index.html  -> pagina per i CF (link da condividere)
+ admin.html  -> solo per te: carica l'Excel e genera cf.json (non linkarla)
+ cf.json, brochure.pdf, common.js, lib/
+
+Pubblicazione: repo GitHub > Settings > Pages > Deploy from branch (main, /root).
+Link CF:  https://<utente>.github.io/<repo>/
+Aggiornare i CF: apri admin.html, carica l'Excel, scarica cf.json e sostituiscilo nel repo.
+Cambiare brochure: sostituisci brochure.pdf (stesso nome, QR su pagina 1 nella stessa posizione).
+Cambiare nome pagina: campo "Nome pagina" in admin.html.

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Admin – genera cf.json</title>
+<style>
+body{font:15px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#F5F0EA;color:#6A4649;margin:0}
+main{max-width:720px;margin:0 auto;padding:24px 16px}
+h1{font-weight:400}.card{background:#FBFAF7;border:1px solid #CBC2C0;border-radius:12px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:10px 0 4px}input[type=text]{width:100%;padding:10px;border:1px solid #CBC2C0;border-radius:8px;font:inherit}
+button{background:#D03F65;color:#fff;border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto}
+</style></head><body><main>
+<h1>Admin – genera <code>cf.json</code></h1>
+<div class="card">
+ <p>Carica l'Excel (colonne: <b>Email</b>, <b>Dominio</b>, <b>Stato Sito</b>). Il file viene elaborato solo nel tuo browser; nessun dato viene inviato.
+ Il <code>cf.json</code> contiene solo l'hash dell'email e l'URL del sito: nessun nome né email in chiaro.</p>
+ <label>File Excel</label><input id="f" type="file" accept=".xlsx,.xls,.csv">
+ <label>Nome pagina (dopo l'URL del sito)</label><input id="page" type="text" value="investi2026">
+ <label>Domini email ammessi (separati da virgola)</label><input id="dom" type="text" value="pfwidiba.it,cfwidiba.it">
+ <button id="go">Genera e scarica cf.json</button>
+</div>
+<div class="card"><b>Esito</b><pre id="log">In attesa del file…</pre></div>
+<script src="lib/xlsx.full.min.js"></script><script src="common.js"></script>
+<script>
+const $=id=>document.getElementById(id), log=t=>$('log').textContent=t;
+$('go').onclick=async()=>{
+  const f=$('f').files[0]; if(!f) return log('Scegli prima il file Excel.');
+  const wb=XLSX.read(await f.arrayBuffer()); const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+  const domains=$('dom').value.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const salt=[...crypto.getRandomValues(new Uint8Array(12))].map(x=>x.toString(16).padStart(2,'0')).join('');
+  const items={}, skipped=[]; let maint=0;
+  for(const r of rows){
+    const em=String(r['Email']||'').trim().toLowerCase(), dom=String(r['Dominio']||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+    const [loc,d]=em.split('@');
+    if(!loc||!d||!domains.includes(d)||!dom){ skipped.push(em||'(vuota)'); continue; }
+    const it={u:'https://'+dom}; if(/manutenzione/i.test(r['Stato Sito'])){it.m=1;maint++;}
+    items[await keyOf(salt,loc)]=it;
+  }
+  const out={salt,page:$('page').value.trim().replace(/^\/+/,''),domains,items};
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'})); a.download='cf.json'; a.click();
+  log(`cf.json generato.\nConsulenti inclusi: ${Object.keys(items).length} (di cui in manutenzione: ${maint})\nEsclusi: ${skipped.length}\n${skipped.join('\n')}\n\nCarica cf.json nella cartella del repository GitHub sostituendo quello esistente.`);
+};
+</script></main></body></html>
