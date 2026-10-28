@@ -9,19 +9,22 @@
     "file": "Investi_con_Widiba_flyer",
     "page": "investi-nuova-liquidita-e-ti-rimborsiamo-il-bollo-per-tutto-il-2027-1HCAA",
     "qr": {
-      "boxX": 179,
-      "boxTop": 432.5,
-      "boxSize": 60.3,
-      "modX": 182.425,
-      "modTop": 435.925,
-      "modSize": 53.45,
-      "boxColor": "#f1efe9",
+      "boxX": 178.874,
+      "boxTop": 430.826,
+      "boxSize": 61.346,
+      "modX": 182.358,
+      "modTop": 434.311,
+      "modSize": 54.377,
+      "boxColor": "#ffffff",
       "dark": "#1e1e1c",
       "label": {
         "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
         "addr": true,
         "color": "#ffffff",
-        "size": 5.8
+        "size": 7,
+        "gap": 16,
+        "lead": 10.5,
+        "dx": 0
       },
       "page": 0,
       "covers": []
