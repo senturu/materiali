@@ -9,12 +9,12 @@
     "file": "Investi_con_Widiba_flyer",
     "page": "investi-nuova-liquidita-e-ti-rimborsiamo-il-bollo-per-tutto-il-2027-1HCAA",
     "qr": {
-      "boxX": 178.968,
-      "boxTop": 431.855,
-      "boxSize": 60.812,
-      "modX": 182.422,
-      "modTop": 435.309,
-      "modSize": 53.904,
+      "boxX": 179,
+      "boxTop": 432.5,
+      "boxSize": 60.3,
+      "modX": 182.425,
+      "modTop": 435.925,
+      "modSize": 53.45,
       "boxColor": "#f1efe9",
       "dark": "#1e1e1c",
       "label": {
@@ -23,9 +23,24 @@
         "color": "#ffffff",
         "size": 5.8
       },
-      "page": 0
+      "page": 0,
+      "covers": []
     },
-    "msg": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “*Investi con Widiba*” il bollo sui tuoi investimenti di tutto il 2027 ti viene rimborsato!\n\nTi ho preparato un riepilogo chiaro con le condizioni: {link}\n\nSe vuoi lo vediamo insieme con calma. \nA presto, _{nome}_, {ruolo} di Banca Widiba"
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi scrivo perché c’è un’iniziativa che può interessarti: con *Investi con Widiba*, se porti nuova liquidità e la investi, puoi ottenere il rimborso dell’imposta di bollo di tutto il 2027.\n\nQui trovi come funziona: {link}\n\nSe vuoi, valutiamo insieme se fa al caso tuo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni, requisiti e limiti nel Regolamento dell’iniziativa._",
+    "msgs": [
+      {
+        "l": "Consulenziale",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi scrivo perché c’è un’iniziativa che può interessarti: con *Investi con Widiba*, se porti nuova liquidità e la investi, puoi ottenere il rimborso dell’imposta di bollo di tutto il 2027.\n\nQui trovi come funziona: {link}\n\nSe vuoi, valutiamo insieme se fa al caso tuo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni, requisiti e limiti nel Regolamento dell’iniziativa._"
+      },
+      {
+        "l": "Diretto",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. Con *Investi con Widiba* puoi farti rimborsare l’imposta di bollo sui tuoi investimenti per tutto il 2027, se porti nuova liquidità (minimo 25.000 €). Dettagli e condizioni qui: {link}\n\nTi va di sentirci per capire se fa per te?"
+      },
+      {
+        "l": "Empatico",
+        "t": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “*Investi con Widiba*” il bollo sui tuoi investimenti di tutto il 2027 ti viene rimborsato!\n\nTi ho preparato un riepilogo chiaro con le condizioni: {link}\n\nSe vuoi lo vediamo insieme con calma. \nA presto, _{nome}_, {ruolo} di Banca Widiba"
+      }
+    ]
   },
   {
     "id": "la-completezza-che-crea-valore",
