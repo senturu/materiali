@@ -20,6 +20,7 @@ function parseEmail(v, domains){
   return {local:m[1]};
 }
 
+const matMsgs=m=>(m.msgs&&m.msgs.length?m.msgs:[{l:'Messaggio',t:m.msg||'{link}'}]);
 const DEF_LABEL={l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8};
 async function makePdf(m, url, site){
   const Q=m.qr, bytes = await (await getFile(m.pdf)).arrayBuffer();
@@ -27,6 +28,7 @@ async function makePdf(m, url, site){
   const { PDFDocument, rgb } = PDFLib;
   const doc = await PDFDocument.load(bytes);
   const page = doc.getPage(Q.page||0), H = page.getHeight();
+  for(const cv of (Q.covers||[])){ const pg=doc.getPage(cv.page||0); pg.drawRectangle({ x:cv.x, y:pg.getHeight()-cv.top-cv.h, width:cv.w, height:cv.h, color:rgb(...hex(cv.color)) }); }
   page.drawRectangle({ x:Q.boxX, y:H-Q.boxTop-Q.boxSize, width:Q.boxSize, height:Q.boxSize, color:rgb(...hex(Q.boxColor)) });
   const qr = qrcode(0,'M'); qr.addData(url); qr.make();
   const n = qr.getModuleCount(), s = Q.modSize/n;

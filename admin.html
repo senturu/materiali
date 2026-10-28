@@ -12,7 +12,7 @@ textarea{min-height:90px}
 .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 button{background:#2C2E37;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;margin:12px 8px 0 0}
 button.s{background:#fff;color:#2C2E37;border:1.5px solid #2C2E37}
-#pw{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;border:1px solid #CBC2C0;margin-top:8px}#pc{display:block;max-width:100%;height:auto}#pr{position:absolute;border:2px solid #D03F65;background:rgba(208,63,101,.15);pointer-events:none}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#prv img{max-width:340px;border:1px solid #ccc;margin:6px 6px 0 0}.it{display:flex;align-items:center;gap:6px;border-top:1px solid #DDD6CA;padding:8px 0}.it b{flex:1}.it button{margin:0;padding:6px 10px;font-size:13px}
+#pw{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;border:1px solid #CBC2C0;margin-top:8px}#pc{display:block;max-width:100%;height:auto}#pw .cvr{position:absolute;border:2px dashed #2C2E37;background:rgba(44,46,55,.12);pointer-events:none}#pr{position:absolute;border:2px solid #D03F65;background:rgba(208,63,101,.15);pointer-events:none}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#prv img{max-width:340px;border:1px solid #ccc;margin:6px 6px 0 0}.it{display:flex;align-items:center;gap:6px;border-top:1px solid #DDD6CA;padding:8px 0}.it b{flex:1}.it button{margin:0;padding:6px 10px;font-size:13px}
 pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto;margin:10px 0 0}
 small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
 .mat{border-top:1px solid #DDD6CA;margin-top:14px;padding-top:6px}
@@ -55,7 +55,10 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <div class="g2"><div><label>Categoria</label><input id="mc" type="text" placeholder="es. Commerciale"></div>
  <div><label>Nome pagina sul sito del CF</label><input id="mp" type="text" placeholder="es. investi2026"></div></div>
  <label>Descrizione (nell’elenco materiali)</label><textarea id="md"></textarea>
- <label>Messaggio WhatsApp</label><textarea id="mm" style="min-height:110px"></textarea>
+ <label>Messaggi WhatsApp (da 1 a 3: il CF sceglie quale usare; lascia vuoti quelli che non servono)</label>
+ <div class="g2" style="grid-template-columns:1fr 3fr"><input class="ml" id="ml0" placeholder="Etichetta 1"><textarea id="mm0" style="min-height:100px"></textarea>
+ <input class="ml" id="ml1" placeholder="Etichetta 2"><textarea id="mm1" style="min-height:100px"></textarea>
+ <input class="ml" id="ml2" placeholder="Etichetta 3"><textarea id="mm2" style="min-height:100px"></textarea></div>
  <small>Segnaposto: <code>{nome}</code> <code>{cognome}</code> <code>{ruolo}</code> <code>{ruolo_min}</code> <code>{sito}</code> <code>{link}</code> · il link è bloccato per il CF. Anteprima: <span id="mpv"></span></small>
  <label>File PDF <small id="pdfnow"></small></label><input id="mf" type="file" accept="application/pdf">
 
@@ -64,6 +67,7 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <h2 style="margin-top:18px">Posizione del QR</h2>
  <small>Scegli la pagina e <b>trascina un riquadro</b> sull’area dove deve comparire il QR (si adatta a un quadrato). Il colore dello sfondo del riquadro e del QR si ricavano dal punto scelto: puoi correggerli.</small>
  <div class="g2"><div><label>Pagina del PDF</label><input id="qp" type="number" min="1" value="1"></div><div><label>&nbsp;</label><small id="psz"></small></div></div>
+ <div class="g2"><div><label>Cosa disegni con il mouse</label><select id="dm"><option value="qr">Il QR</option><option value="cv">Un’area da coprire (nasconde una scritta originale)</option></select></div><div id="cvl"></div></div>
  <div id="pw"><canvas id="pc"></canvas><div id="pr"></div></div>
  <div class="g4"><div><label>X (pt)</label><input id="bx" type="number" step="0.1"></div><div><label>Y dall’alto (pt)</label><input id="by" type="number" step="0.1"></div><div><label>Lato (pt)</label><input id="bs" type="number" step="0.1"></div>
  <div><label>Colori sfondo / QR</label><input id="cb" type="color" style="width:48%"> <input id="cd" type="color" style="width:48%"></div></div>
@@ -160,20 +164,20 @@ $('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); MATS=r?
 const DEFQ={page:0,boxX:0,boxTop:0,boxSize:62.358,modX:0,modTop:0,modSize:55.276,boxColor:'#F1EFE9',dark:'#1E1E1C',label:{l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8}};
 let pg={w:595,h:842,scale:1,pdfDoc:null};
 function openEd(m,idx){
-  E={idx,isNew:!m, m:m?JSON.parse(JSON.stringify(m)):{id:'',title:'',desc:'',cat:'',msg:'Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}',page:'',qr:JSON.parse(JSON.stringify(DEFQ))},newPdf:null};
+  E={idx,isNew:!m, m:m?JSON.parse(JSON.stringify(m)):{id:'',title:'',desc:'',cat:'',msg:'',msgs:[{l:'Messaggio',t:'Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}'}],page:'',qr:JSON.parse(JSON.stringify(DEFQ))},newPdf:null};
   if(typeof E.m.qr.label!=='object') E.m.qr.label=E.m.qr.label?DEFQ.label:{l1:'',addr:false,color:'#FFFFFF',size:5.8};
-  const q=E.m.qr;
+  const q=E.m.qr; q.covers=q.covers||[]; if(!E.m.msgs||!E.m.msgs.length) E.m.msgs=[{l:'Messaggio',t:E.m.msg||''}];
   $('ed').style.display='block'; $('edt').textContent=m?('Modifica: '+m.title):'Nuovo materiale';
-  $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; $('mm').value=E.m.msg||'';
+  $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; for(let i=0;i<3;i++){ const x=E.m.msgs[i]||{l:'',t:''}; $('ml'+i).value=x.l||''; $('mm'+i).value=x.t||''; } $('dm').value='qr';
   $('mf').value=''; $('cv').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
   $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8;
   $('prv').innerHTML=''; mpv(); $('ed').scrollIntoView({behavior:'smooth'});
-  if(m) loadPage(null);
+  renderCovers(); if(m) loadPage(null);
 }
 $('new').onclick=()=>{ openEd(null,-1); pg.pdfDoc=null; const c=$('pc'); c.width=1; c.height=1; $('pr').style.display='none'; };
 $('canc').onclick=()=>{ $('ed').style.display='none'; };
-function mpv(){ $('mpv').textContent=$('mm').value.replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+$('mp').value}[k]||x)); }
-['mm','mp'].forEach(i=>$(i).oninput=mpv);
+function mpv(){ $('mpv').textContent=$('mm0').value.replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+$('mp').value}[k]||x)); }
+['mm0','mp'].forEach(i=>$(i).oninput=mpv);
 $('mf').onchange=async()=>{ const f=$('mf').files[0]; if(!f) return; E.newPdf=new Uint8Array(await f.arrayBuffer()); $('pdfnow').textContent='(nuovo: '+f.name+')'; $('qp').value=1; await loadPage(E.newPdf); };
 async function loadPage(bytes){
   try{
@@ -187,7 +191,7 @@ async function drawPage(){
   const p=await pg.pdfDoc.getPage(n), v1=p.getViewport({scale:1}); pg.w=v1.width; pg.h=v1.height; pg.scale=900/pg.w;
   const v=p.getViewport({scale:pg.scale}), c=$('pc'); c.width=v.width; c.height=v.height; c.style.width=Math.min(420,v.width)+'px';
   await p.render({canvasContext:c.getContext('2d'),viewport:v}).promise; $('psz').textContent=`Pagina ${n}/${pg.pdfDoc.numPages} · ${pg.w.toFixed(0)}×${pg.h.toFixed(0)} pt`;
-  fromFields(); }
+  fromFields(); renderCovers(); }
 $('qp').onchange=drawPage;
 function setBox(x,y,s){ const q=E.m.qr; q.boxX=+x.toFixed(3); q.boxTop=+y.toFixed(3); q.boxSize=+s.toFixed(3); q.modSize=+(s*0.8864).toFixed(3); q.modX=+(x+s*0.0568).toFixed(3); q.modTop=+(y+s*0.0568).toFixed(3); toFields(); }
 function toFields(){ const q=E.m.qr; $('bx').value=q.boxX; $('by').value=q.boxTop; $('bs').value=q.boxSize; const r=$('pr'); r.style.display=q.boxSize>0&&q.boxX+q.boxTop>0?'block':'none';
@@ -195,14 +199,29 @@ function toFields(){ const q=E.m.qr; $('bx').value=q.boxX; $('by').value=q.boxTo
 function fromFields(){ const x=+$('bx').value||E.m.qr.boxX, y=+$('by').value||E.m.qr.boxTop, s=+$('bs').value||E.m.qr.boxSize; setBox(x,y,s); }
 ['bx','by','bs'].forEach(i=>$(i).oninput=fromFields);
 let drag=null;
-$('pw').addEventListener('pointerdown',e=>{ if(!pg.pdfDoc) return; const r=$('pc').getBoundingClientRect(); drag={x:(e.clientX-r.left)/r.width*pg.w,y:(e.clientY-r.top)/r.height*pg.h}; $('pw').setPointerCapture(e.pointerId); setBox(drag.x,drag.y,1); });
-$('pw').addEventListener('pointermove',e=>{ if(!drag) return; const r=$('pc').getBoundingClientRect(); const x=(e.clientX-r.left)/r.width*pg.w,y=(e.clientY-r.top)/r.height*pg.h; const s=Math.max(Math.abs(x-drag.x),Math.abs(y-drag.y),4); setBox(x<drag.x?drag.x-s:drag.x,y<drag.y?drag.y-s:drag.y,s); });
-$('pw').addEventListener('pointerup',()=>{ if(!drag) return; drag=null; autoColors(); });
+const ptr=e=>{ const r=$('pc').getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*pg.w,y:(e.clientY-r.top)/r.height*pg.h}; };
+$('pw').addEventListener('pointerdown',e=>{ if(!pg.pdfDoc) return; const p=ptr(e); drag=p; $('pw').setPointerCapture(e.pointerId);
+  if($('dm').value==='cv'){ E.tmp={x:p.x,top:p.y,w:0,h:0}; renderCovers(); } else setBox(p.x,p.y,1); });
+$('pw').addEventListener('pointermove',e=>{ if(!drag) return; const p=ptr(e);
+  if($('dm').value==='cv'){ E.tmp={x:Math.min(p.x,drag.x),top:Math.min(p.y,drag.y),w:Math.abs(p.x-drag.x),h:Math.abs(p.y-drag.y)}; renderCovers(); return; }
+  const s=Math.max(Math.abs(p.x-drag.x),Math.abs(p.y-drag.y),4); setBox(p.x<drag.x?drag.x-s:drag.x,p.y<drag.y?drag.y-s:drag.y,s); });
+$('pw').addEventListener('pointerup',()=>{ if(!drag) return; drag=null;
+  if($('dm').value==='cv'){ const t=E.tmp; E.tmp=null; if(t&&t.w>2&&t.h>2){ const c={page:(+$('qp').value||1)-1,x:+t.x.toFixed(2),top:+t.top.toFixed(2),w:+t.w.toFixed(2),h:+t.h.toFixed(2),color:'#FFFFFF'}; c.color=sampleRect(c); E.m.qr.covers.push(c); } renderCovers(); return; }
+  autoColors(); });
+function sampleRect(c){ const ctx=$('pc').getContext('2d'), k=pg.scale, o=1; let R=0,G=0,B=0;
+  [[c.x+o,c.top+o],[c.x+c.w-o,c.top+o],[c.x+o,c.top+c.h-o],[c.x+c.w-o,c.top+c.h-o]].forEach(([x,y])=>{ const d=ctx.getImageData(Math.round(x*k),Math.round(y*k),1,1).data; R+=d[0];G+=d[1];B+=d[2]; });
+  const h=n=>Math.round(n/4).toString(16).padStart(2,'0'); return '#'+h(R)+h(G)+h(B); }
+function renderCovers(){ if(!E) return; const w=$('pw'); w.querySelectorAll('.cvr').forEach(x=>x.remove()); const cur=(+$('qp').value||1)-1;
+  const add=c=>{ const d=document.createElement('div'); d.className='cvr'; d.style.cssText=`left:${c.x/pg.w*100}%;top:${c.top/pg.h*100}%;width:${c.w/pg.w*100}%;height:${c.h/pg.h*100}%`; w.appendChild(d); };
+  E.m.qr.covers.forEach(c=>{ if((c.page||0)===cur) add(c); }); if(E.tmp) add(E.tmp);
+  $('cvl').innerHTML=E.m.qr.covers.length?'<label>Aree da coprire</label>'+E.m.qr.covers.map((c,i)=>`<div class="it" style="padding:4px 0"><b style="font-weight:400">Area ${i+1} · pag. ${(c.page||0)+1}</b><input type="color" value="${c.color}" data-i="${i}" class="cc"><button class="s" data-i="${i}">Togli</button></div>`).join(''):'<small>Nessuna area da coprire.</small>';
+  $('cvl').querySelectorAll('.cc').forEach(x=>x.oninput=()=>{ E.m.qr.covers[+x.dataset.i].color=x.value; });
+  $('cvl').querySelectorAll('button').forEach(x=>x.onclick=()=>{ E.m.qr.covers.splice(+x.dataset.i,1); renderCovers(); }); }
 function autoColors(){ const q=E.m.qr, c=$('pc'), ctx=c.getContext('2d'), k=pg.scale; const o=1.5,pts=[[q.boxX+o,q.boxTop+o],[q.boxX+q.boxSize-o,q.boxTop+o],[q.boxX+o,q.boxTop+q.boxSize-o],[q.boxX+q.boxSize-o,q.boxTop+q.boxSize-o]].map(([x,y])=>[Math.min(Math.max(x,0),pg.w-1),Math.min(Math.max(y,0),pg.h-1)]);
   let R=0,G=0,B=0; pts.forEach(([x,y])=>{ const d=ctx.getImageData(Math.round(x*k),Math.round(y*k),1,1).data; R+=d[0];G+=d[1];B+=d[2]; }); R=Math.round(R/4);G=Math.round(G/4);B=Math.round(B/4);
   const h=n=>n.toString(16).padStart(2,'0'); q.boxColor='#'+h(R)+h(G)+h(B); const lum=(0.2126*R+0.7152*G+0.0722*B)/255; q.dark=lum>0.5?'#1E1E1C':'#FFFFFF'; $('cb').value=q.boxColor; $('cd').value=q.dark; }
 $('cb').oninput=()=>E.m.qr.boxColor=$('cb').value; $('cd').oninput=()=>E.m.qr.dark=$('cd').value;
-function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msg=$('mm').value;
+function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msgs=[0,1,2].map(i=>({l:$('ml'+i).value.trim(),t:$('mm'+i).value.trim()})).filter(x=>x.t).map((x,i)=>({l:x.l||('Messaggio '+(i+1)),t:x.t})); if(!m.msgs.length) throw new Error('Scrivi almeno un messaggio WhatsApp.'); m.msg=m.msgs[0].t;
   q.page=(+$('qp').value||1)-1; q.label={l1:$('l1').value.trim(),addr:$('la').checked,color:$('lc').value,size:+$('ls').value||5.8}; q.boxColor=$('cb').value; q.dark=$('cd').value;
   if(!m.title) throw new Error('Inserisci il titolo.'); if(!m.page) throw new Error('Inserisci il nome pagina.'); if(!(q.boxSize>0)||(q.boxX+q.boxTop)<=0) throw new Error('Disegna il riquadro del QR sul PDF.'); return m; }
 $('prevb').onclick=async()=>{ try{ const m=collect(); const mm=JSON.parse(JSON.stringify(m));

@@ -29,3 +29,7 @@ AGGIUNGERE UN NUOVO MATERIALE (senza ricostruire il sito)
 4. Imposta la scritta sotto il QR (testo, indirizzo sito, colore, dimensione). "Anteprima" per controllare.
 5. "Salva su GitHub": PDF, miniatura e elenco vengono pubblicati; online in 1-2 minuti.
 Per modificare un materiale esistente (testi, posizione QR, messaggio) usa "Modifica"; il PDF si sostituisce ricaricandolo.
+
+NOVITA: 3 messaggi e aree da coprire
+- Nell'editor materiale puoi scrivere fino a 3 messaggi WhatsApp con etichetta: il CF sceglie con i pulsanti sopra il testo. Se ne compili uno solo, i pulsanti non compaiono.
+- "Cosa disegni con il mouse" > "Un'area da coprire": disegna un rettangolo sopra una scritta originale (es. "Scopri di più"). Il colore di sfondo e' ricavato in automatico (correggibile). Il testo resta nel PDF sotto il riquadro, quindi funziona su sfondi a tinta unita.

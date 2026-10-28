@@ -35,6 +35,7 @@ label{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase
 input{width:100%;font:inherit;font-size:17px;padding:14px 15px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
 input:focus,textarea:focus{outline:none;border-color:var(--ink)}
 #msgtxt{width:100%;min-height:150px;font:inherit;font-size:15px;line-height:1.5;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+#msgtabs.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}#msgtabs .pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 #msgtxt:focus{outline:none;border-color:var(--ink)}
 .fld{background:#E4EEE9;border-radius:4px;padding:1px 4px;color:#25483a}
 .fld.lnk{background:#E9E4EE;color:#3d2c52;user-select:none;-webkit-user-select:none;cursor:not-allowed}
@@ -129,6 +130,7 @@ textarea{width:100%;font:inherit;font-size:15px;line-height:1.4;padding:12px 14p
     <div class="card" style="margin-top:14px">
      <label>Messaggio per WhatsApp</label>
      <div class="legend"><span class="fld">campi precompilati</span> modificabili · <span class="fld lnk">link</span> bloccato</div>
+     <div id="msgtabs" class="tabs"></div>
      <div id="msgtxt" contenteditable="true" spellcheck="true"></div>
      <label class="chk"><input type="checkbox" id="att" checked> Allega le immagini del flyer</label>
      <div class="row" style="margin-top:10px"><button class="pill" id="rst">Ripristina testo</button><button class="pill" id="cpm">Copia messaggio</button></div>
@@ -197,10 +199,12 @@ function fieldsFor(m,url){
   const R=me.g==='F'?'Consulente Finanziaria':'Consulente Finanziario';
   return {nome:me.n||'',cognome:me.c||'',ruolo:R,ruolo_min:R.toLowerCase(),sito:me.u.replace(/^https?:\/\//,''),link:url};
 }
-function buildEditor(m,url){
+function buildEditor(m,url,i){
+  i=i||0; const msgs=matMsgs(m); if(i>=msgs.length) i=0; if(cur) cur.mi=i;
+  const tb=$('msgtabs'); tb.innerHTML=''; if(msgs.length>1) msgs.forEach((x,j)=>{ const b=document.createElement('button'); b.className='pill'+(j===i?' on':''); b.textContent=x.l||('Messaggio '+(j+1)); b.onclick=()=>buildEditor(m,url,j); tb.appendChild(b); });
   const rep=fieldsFor(m,url), ed=$('msgtxt'); ed.innerHTML='';
   let hasLink=false;
-  String(m.msg||'{link}').split(/(\{\w+\})/).forEach(p=>{
+  String(msgs[i].t||'{link}').split(/(\{\w+\})/).forEach(p=>{
     const k=(p.match(/^\{(\w+)\}$/)||[])[1];
     if(k && k in rep){
       const sp=document.createElement('span'); sp.className='fld'+(k==='link'?' lnk':''); sp.textContent=rep[k]; sp.dataset.k=k;
@@ -253,7 +257,7 @@ $('bWa').onclick = async ()=>{
   }
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 };
-$('rst').onclick = ()=> buildEditor(cur.m,cur.url);
+$('rst').onclick = ()=> buildEditor(cur.m,cur.url,cur.mi||0);
 $('cpm').onclick = async ()=>{ const t=msgText(); try{ await navigator.clipboard.writeText(t); }catch(e){ const r=document.createRange(); r.selectNodeContents($('msgtxt')); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); sel.removeAllRanges(); } $('cpm').textContent='Copiato ✓'; setTimeout(()=>$('cpm').textContent='Copia messaggio',2000); };
 $('bPdf').onclick = ()=> out([new File([cur.pdf],cur.m.file+'.pdf',{type:'application/pdf'})]);
 $('bImgs').onclick = async ()=> out(await Promise.all(cur.cv.map(async(c,i)=>new File([await toBlob(c)],`${cur.m.file}_${i+1}.png`,{type:'image/png'}))));
