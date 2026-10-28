@@ -59,6 +59,8 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <small>Segnaposto: <code>{nome}</code> <code>{cognome}</code> <code>{ruolo}</code> <code>{ruolo_min}</code> <code>{sito}</code> <code>{link}</code> · il link è bloccato per il CF. Anteprima: <span id="mpv"></span></small>
  <label>File PDF <small id="pdfnow"></small></label><input id="mf" type="file" accept="application/pdf">
 
+ <label>Copertina nell’elenco <small id="cvnow">(facoltativa: se vuoto usa la prima pagina del PDF)</small></label><input id="cv" type="file" accept="image/jpeg,image/png"><small>Per rimettere la prima pagina su un materiale esistente, ricarica il PDF.</small>
+
  <h2 style="margin-top:18px">Posizione del QR</h2>
  <small>Scegli la pagina e <b>trascina un riquadro</b> sull’area dove deve comparire il QR (si adatta a un quadrato). Il colore dello sfondo del riquadro e del QR si ricavano dal punto scelto: puoi correggerli.</small>
  <div class="g2"><div><label>Pagina del PDF</label><input id="qp" type="number" min="1" value="1"></div><div><label>&nbsp;</label><small id="psz"></small></div></div>
@@ -162,7 +164,7 @@ function openEd(m,idx){
   const q=E.m.qr;
   $('ed').style.display='block'; $('edt').textContent=m?('Modifica: '+m.title):'Nuovo materiale';
   $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; $('mm').value=E.m.msg||'';
-  $('mf').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
+  $('mf').value=''; $('cv').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
   $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8;
   $('prv').innerHTML=''; mpv(); $('ed').scrollIntoView({behavior:'smooth'});
   if(m) loadPage(null);
@@ -211,9 +213,11 @@ $('savem').onclick=async()=>{ try{
   if(!MATS) throw new Error('Premi prima “Carica elenco da GitHub”.');
   if(E.isNew){ let id=slug(m.title), n=2; while(MATS.some(x=>x.id===id)) id=slug(m.title)+'-'+n++; m.id=id; m.file=m.title.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,''); m.pdf=`materials/${id}.pdf`; m.thumb=`materials/${id}.jpg`; }
   L2('Salvataggio in corso…');
-  if(E.newPdf){ await ghPutRaw(m.pdf,bytesB64(E.newPdf),'Carica PDF '+m.title);
-    const p=await pg.pdfDoc.getPage(1), vp=p.getViewport({scale:700/p.getViewport({scale:1}).width}), c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
-    await ghPutRaw(m.thumb,c.toDataURL('image/jpeg',0.85).split(',')[1],'Anteprima '+m.title); }
+  if(E.newPdf) await ghPutRaw(m.pdf,bytesB64(E.newPdf),'Carica PDF '+m.title);
+  const cvf=$('cv').files[0]; let cvc=null;
+  if(cvf){ const im=await createImageBitmap(cvf), k=Math.min(1,700/im.width); cvc=document.createElement('canvas'); cvc.width=Math.round(im.width*k); cvc.height=Math.round(im.height*k); const x=cvc.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,cvc.width,cvc.height); x.drawImage(im,0,0,cvc.width,cvc.height); }
+  else if(E.newPdf){ const p=await pg.pdfDoc.getPage(1), vp=p.getViewport({scale:700/p.getViewport({scale:1}).width}); cvc=document.createElement('canvas'); cvc.width=vp.width; cvc.height=vp.height; await p.render({canvasContext:cvc.getContext('2d'),viewport:vp}).promise; }
+  if(cvc){ if(!m.thumb) m.thumb=`materials/${m.id}.jpg`; await ghPutRaw(m.thumb,cvc.toDataURL('image/jpeg',0.85).split(',')[1],'Copertina '+m.title); }
   if(E.isNew) MATS.push(m); else MATS[E.idx]=m;
   await saveJson((E.isNew?'Aggiungi materiale ':'Aggiorna materiale ')+m.title); renderList(); $('ed').style.display='none';
 }catch(e){ L2('Errore: '+e.message); } };
