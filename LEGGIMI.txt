@@ -20,3 +20,12 @@ AGGIUNGERE UN NUOVO MATERIALE
    boxX/boxTop = angolo del riquadro, boxSize = lato, modX/modTop/modSize = area dei moduli scuri; boxColor/dark = colori;
    label = true per aggiungere la scritta "INQUADRA IL QR CODE..." e l'indirizzo sotto il QR).
 3. Carica i file nel repository. Nessuna modifica al codice.
+
+
+AGGIUNGERE UN NUOVO MATERIALE (senza ricostruire il sito)
+1. admin.html > punto 1: collega GitHub. Punto 3: "Carica elenco da GitHub".
+2. "+ Nuovo materiale": titolo, categoria, nome pagina, descrizione, messaggio WhatsApp, PDF.
+3. Trascina un riquadro sul PDF dove deve andare il QR (scegli la pagina). Colori ricavati in automatico, correggibili.
+4. Imposta la scritta sotto il QR (testo, indirizzo sito, colore, dimensione). "Anteprima" per controllare.
+5. "Salva su GitHub": PDF, miniatura e elenco vengono pubblicati; online in 1-2 minuti.
+Per modificare un materiale esistente (testi, posizione QR, messaggio) usa "Modifica"; il PDF si sostituisce ricaricandolo.

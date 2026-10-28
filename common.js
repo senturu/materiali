@@ -20,11 +20,13 @@ function parseEmail(v, domains){
   return {local:m[1]};
 }
 
+const DEF_LABEL={l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8};
 async function makePdf(m, url, site){
   const Q=m.qr, bytes = await (await getFile(m.pdf)).arrayBuffer();
+  const L = Q.label===true ? DEF_LABEL : (Q.label && typeof Q.label==='object' ? Q.label : null);
   const { PDFDocument, rgb } = PDFLib;
   const doc = await PDFDocument.load(bytes);
-  const page = doc.getPage(0), H = page.getHeight();
+  const page = doc.getPage(Q.page||0), H = page.getHeight();
   page.drawRectangle({ x:Q.boxX, y:H-Q.boxTop-Q.boxSize, width:Q.boxSize, height:Q.boxSize, color:rgb(...hex(Q.boxColor)) });
   const qr = qrcode(0,'M'); qr.addData(url); qr.make();
   const n = qr.getModuleCount(), s = Q.modSize/n;
@@ -32,17 +34,22 @@ async function makePdf(m, url, site){
     page.drawRectangle({ x:Q.modX+c*s-0.02, y:H-Q.modTop-(r+1)*s-0.02, width:s+0.04, height:s+0.04, color:rgb(...hex(Q.dark)) });
   const cxm = Q.boxX+Q.boxSize/2, yb = H-Q.boxTop-Q.boxSize;
   let tw=0, ty=yb;
-  if(Q.label){
+  if(L && (L.l1 || L.addr)){
     doc.registerFontkit(fontkit);
     const ld = async f=>doc.embedFont(await (await getFile('fonts/'+f)).arrayBuffer());
     const font = await ld('Widiba-Medium.ttf'), font2 = await ld('Widiba-Regular.ttf');
-    const txt='INQUADRA IL QR CODE E VAI AL MIO SITO', sz=5.8, cs=1.0;
-    tw = font.widthOfTextAtSize(txt,sz)+cs*(txt.length-1);
-    let cx=cxm-tw/2;
-    for(const ch of txt){ page.drawText(ch,{x:cx,y:yb-9,size:sz,font,color:rgb(1,1,1)}); cx+=font.widthOfTextAtSize(ch,sz)+cs; }
-    const addr = site.replace(/^https?:\/\//,'').replace(/\/+$/,''), sz2=7;
-    page.drawText(addr,{x:cxm-font2.widthOfTextAtSize(addr,sz2)/2,y:yb-19.5,size:sz2,font:font2,color:rgb(1,1,1)});
-    ty=yb-22;
+    const col=rgb(...hex(L.color||'#FFFFFF')), sz=+L.size||5.8, cs=sz*0.17;
+    let y=yb-9;
+    if(L.l1){
+      tw = font.widthOfTextAtSize(L.l1,sz)+cs*(L.l1.length-1);
+      let cx=cxm-tw/2;
+      for(const ch of L.l1){ page.drawText(ch,{x:cx,y,size:sz,font,color:col}); cx+=font.widthOfTextAtSize(ch,sz)+cs; }
+      y-=10.5;
+    }
+    if(L.addr){
+      const addr = site.replace(/^https?:\/\//,'').replace(/\/+$/,''), sz2=sz*1.2, w2=font2.widthOfTextAtSize(addr,sz2);
+      page.drawText(addr,{x:cxm-w2/2,y,size:sz2,font:font2,color:col}); tw=Math.max(tw,w2); ty=y-3;
+    } else ty=y+10.5-3;
   }
   const ctx=doc.context;
   const link=ctx.obj({Type:'Annot',Subtype:'Link',Rect:[Math.min(Q.boxX-4,cxm-tw/2-4),ty,Math.max(Q.boxX+Q.boxSize+4,cxm+tw/2+4),H-Q.boxTop],Border:[0,0,0],

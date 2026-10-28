@@ -12,6 +12,7 @@ textarea{min-height:90px}
 .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 button{background:#2C2E37;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;margin:12px 8px 0 0}
 button.s{background:#fff;color:#2C2E37;border:1.5px solid #2C2E37}
+#pw{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;border:1px solid #CBC2C0;margin-top:8px}#pc{display:block;max-width:100%;height:auto}#pr{position:absolute;border:2px solid #D03F65;background:rgba(208,63,101,.15);pointer-events:none}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#prv img{max-width:340px;border:1px solid #ccc;margin:6px 6px 0 0}.it{display:flex;align-items:center;gap:6px;border-top:1px solid #DDD6CA;padding:8px 0}.it b{flex:1}.it button{margin:0;padding:6px 10px;font-size:13px}
 pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto;margin:10px 0 0}
 small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
 .mat{border-top:1px solid #DDD6CA;margin-top:14px;padding-top:6px}
@@ -40,15 +41,39 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
 </div>
 
 <div class="card">
- <h2>3 · Materiali e messaggio WhatsApp (<code>materials.json</code>)</h2>
- <small>Segnaposto nel messaggio: <code>{nome}</code> <code>{cognome}</code> <code>{ruolo}</code> (Consulente Finanziario/Finanziaria) <code>{ruolo_min}</code> <code>{sito}</code> <code>{link}</code>. Il CF potrà comunque modificare il testo prima di inviarlo.</small><br>
- <button class="s" id="load">Carica da GitHub</button><button class="s" id="loadl" >…oppure da file</button><input id="lf" type="file" accept=".json" style="display:none">
- <div id="mats"></div>
- <div id="mbtn" style="display:none"><button id="save">Salva su GitHub</button><button class="s" id="savel">Solo scarica materials.json</button></div>
+ <h2>3 · Materiali (flyer, brochure…)</h2>
+ <small>Qui aggiungi o modifichi i materiali che i CF possono personalizzare: carichi il PDF, indichi con il mouse dove va il QR, imposti scritte e messaggio WhatsApp. Il salvataggio avviene su GitHub (serve il punto 1). Non serve alcuna ricostruzione del sito.</small><br>
+ <button class="s" id="load">Carica elenco da GitHub</button>
+ <div id="list"></div>
+ <button id="new" style="display:none">+ Nuovo materiale</button>
  <pre id="log2" style="display:none"></pre>
 </div>
 
-<script src="lib/xlsx.full.min.js"></script><script src="common.js"></script>
+<div class="card" id="ed" style="display:none">
+ <h2 id="edt">Materiale</h2>
+ <label>Titolo</label><input id="mt" type="text">
+ <div class="g2"><div><label>Categoria</label><input id="mc" type="text" placeholder="es. Commerciale"></div>
+ <div><label>Nome pagina sul sito del CF</label><input id="mp" type="text" placeholder="es. investi2026"></div></div>
+ <label>Descrizione (nell’elenco materiali)</label><textarea id="md"></textarea>
+ <label>Messaggio WhatsApp</label><textarea id="mm" style="min-height:110px"></textarea>
+ <small>Segnaposto: <code>{nome}</code> <code>{cognome}</code> <code>{ruolo}</code> <code>{ruolo_min}</code> <code>{sito}</code> <code>{link}</code> · il link è bloccato per il CF. Anteprima: <span id="mpv"></span></small>
+ <label>File PDF <small id="pdfnow"></small></label><input id="mf" type="file" accept="application/pdf">
+
+ <h2 style="margin-top:18px">Posizione del QR</h2>
+ <small>Scegli la pagina e <b>trascina un riquadro</b> sull’area dove deve comparire il QR (si adatta a un quadrato). Il colore dello sfondo del riquadro e del QR si ricavano dal punto scelto: puoi correggerli.</small>
+ <div class="g2"><div><label>Pagina del PDF</label><input id="qp" type="number" min="1" value="1"></div><div><label>&nbsp;</label><small id="psz"></small></div></div>
+ <div id="pw"><canvas id="pc"></canvas><div id="pr"></div></div>
+ <div class="g4"><div><label>X (pt)</label><input id="bx" type="number" step="0.1"></div><div><label>Y dall’alto (pt)</label><input id="by" type="number" step="0.1"></div><div><label>Lato (pt)</label><input id="bs" type="number" step="0.1"></div>
+ <div><label>Colori sfondo / QR</label><input id="cb" type="color" style="width:48%"> <input id="cd" type="color" style="width:48%"></div></div>
+
+ <h2 style="margin-top:18px">Scritte sotto il QR</h2>
+ <label>Testo (lascia vuoto per nessuna scritta)</label><input id="l1" type="text">
+ <div class="g4"><div><label style="font-weight:400"><input id="la" type="checkbox"> Indirizzo del sito</label></div><div><label>Colore</label><input id="lc" type="color"></div><div><label>Dimensione</label><input id="ls" type="number" step="0.1" min="3" max="14"></div></div>
+ <button class="s" id="prevb">Anteprima con QR di prova</button> <button id="savem">Salva su GitHub</button> <button class="s" id="canc">Chiudi</button>
+ <div id="prv" style="margin-top:12px"></div>
+</div>
+
+<script src="lib/xlsx.full.min.js"></script><script src="lib/pdf-lib.min.js"></script><script src="lib/fontkit.umd.min.js"></script><script src="lib/qrcode.js"></script><script src="lib/pdf.min.js"></script><script src="common.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 try{ const s=JSON.parse(localStorage.getItem('cfhub_gh')||'{}'); for(const k of ['o','r','b','t']) if(s[k]) $(k).value=s[k]; if(s.t) $('rem').checked=true; }catch(e){}
@@ -108,20 +133,88 @@ $('genl').onclick=async()=>{ try{ const {json,rep}=await build(); dl('cf.json',j
 $('gen').onclick=async()=>{ try{ const {json,rep}=await build(); $('log').textContent=rep+'\n\nPubblico su GitHub…'; await ghPut('cf.json',json,'Aggiorna elenco CF (da admin)'); $('log').textContent=rep+'\n\n✓ cf.json pubblicato. Online entro circa 1-2 minuti.'; }catch(e){ $('log').textContent='Errore: '+e.message; } };
 
 /* ---- materiali ---- */
-let MATS=null;
-function renderMats(){ $('mats').innerHTML=MATS.map((m,i)=>`<div class="mat"><b>${m.title}</b> <small>(${m.id})</small>
- <label>Titolo</label><input type="text" data-i="${i}" data-k="title" value="${(m.title||'').replace(/"/g,'&quot;')}">
- <label>Descrizione</label><textarea data-i="${i}" data-k="desc">${m.desc||''}</textarea>
- <label>Nome pagina sul sito del CF</label><input type="text" data-i="${i}" data-k="page" value="${m.page||''}">
- <label>Messaggio WhatsApp</label><textarea data-i="${i}" data-k="msg" style="min-height:120px">${m.msg||''}</textarea>
- <small>Anteprima: <span id="pv${i}"></span></small></div>`).join('');
-  document.querySelectorAll('#mats [data-k]').forEach(el=>el.oninput=()=>{ MATS[el.dataset.i][el.dataset.k]=el.value; prev(el.dataset.i); });
-  MATS.forEach((m,i)=>prev(i)); $('mbtn').style.display='block'; }
-function prev(i){ const m=MATS[i]; const t=(m.msg||'').replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+(m.page||'')}[k]||x)); $('pv'+i).textContent=t; }
+let MATS=null, E=null;
 const L2=t=>{ $('log2').style.display='block'; $('log2').textContent=t; };
-$('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); if(!r) throw new Error('materials.json non trovato nel repository.'); MATS=JSON.parse(r.text); renderMats(); L2('Caricato da GitHub.'); }catch(e){ L2('Errore: '+e.message); } };
-$('loadl').onclick=()=>$('lf').click();
-$('lf').onchange=async()=>{ try{ MATS=JSON.parse(await $('lf').files[0].text()); renderMats(); L2('Caricato dal file.'); }catch(e){ L2('Errore: '+e.message); } };
-$('save').onclick=async()=>{ try{ await ghPut('materials.json',JSON.stringify(MATS,null,2),'Aggiorna materiali e messaggi (da admin)'); L2('✓ materials.json pubblicato. Online entro circa 1-2 minuti.'); }catch(e){ L2('Errore: '+e.message); } };
-$('savel').onclick=()=>dl('materials.json',JSON.stringify(MATS,null,2));
+const slug=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'materiale';
+function bytesB64(u8){ let s=''; for(let i=0;i<u8.length;i+=0x8000) s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(s); }
+async function ghPutRaw(path,b64c,msg){ const c=cfgGh(); const cur=await ghGet(path).catch(()=>null);
+  const body={message:msg,content:b64c,branch:c.b}; if(cur) body.sha=cur.sha;
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`,{method:'PUT',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,200)); }
+function renderList(){
+  $('list').innerHTML=MATS.map((m,i)=>`<div class="it"><b>${m.title}</b><small>${m.cat||''}</small><button class="s" data-a="up" data-i="${i}">↑</button><button class="s" data-a="dn" data-i="${i}">↓</button><button class="s" data-a="ed" data-i="${i}">Modifica</button><button class="s" data-a="del" data-i="${i}">Elimina</button></div>`).join('')||'<small>Nessun materiale.</small>';
+  $('new').style.display='inline-block';
+  $('list').querySelectorAll('button').forEach(b=>b.onclick=async()=>{ const i=+b.dataset.i,a=b.dataset.a;
+    if(a==='ed') return openEd(MATS[i],i);
+    if(a==='up'&&i>0) [MATS[i-1],MATS[i]]=[MATS[i],MATS[i-1]];
+    if(a==='dn'&&i<MATS.length-1) [MATS[i+1],MATS[i]]=[MATS[i],MATS[i+1]];
+    if(a==='del'){ if(!confirm('Togliere «'+MATS[i].title+'» dall’elenco? (i file restano nel repository)')) return; MATS.splice(i,1); }
+    try{ await saveJson('Aggiorna elenco materiali (da admin)'); renderList(); }catch(e){ L2('Errore: '+e.message); } }); }
+async function saveJson(msg){ await ghPut('materials.json',JSON.stringify(MATS,null,2),msg); L2('✓ materials.json pubblicato. Online entro circa 1-2 minuti.'); }
+$('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); MATS=r?JSON.parse(r.text):[]; renderList(); L2('Elenco caricato da GitHub.'); }catch(e){ L2('Errore: '+e.message); } };
+
+/* editor */
+const DEFQ={page:0,boxX:0,boxTop:0,boxSize:62.358,modX:0,modTop:0,modSize:55.276,boxColor:'#F1EFE9',dark:'#1E1E1C',label:{l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8}};
+let pg={w:595,h:842,scale:1,pdfDoc:null};
+function openEd(m,idx){
+  E={idx,isNew:!m, m:m?JSON.parse(JSON.stringify(m)):{id:'',title:'',desc:'',cat:'',msg:'Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}',page:'',qr:JSON.parse(JSON.stringify(DEFQ))},newPdf:null};
+  if(typeof E.m.qr.label!=='object') E.m.qr.label=E.m.qr.label?DEFQ.label:{l1:'',addr:false,color:'#FFFFFF',size:5.8};
+  const q=E.m.qr;
+  $('ed').style.display='block'; $('edt').textContent=m?('Modifica: '+m.title):'Nuovo materiale';
+  $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; $('mm').value=E.m.msg||'';
+  $('mf').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
+  $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8;
+  $('prv').innerHTML=''; mpv(); $('ed').scrollIntoView({behavior:'smooth'});
+  if(m) loadPage(null);
+}
+$('new').onclick=()=>{ openEd(null,-1); pg.pdfDoc=null; const c=$('pc'); c.width=1; c.height=1; $('pr').style.display='none'; };
+$('canc').onclick=()=>{ $('ed').style.display='none'; };
+function mpv(){ $('mpv').textContent=$('mm').value.replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+$('mp').value}[k]||x)); }
+['mm','mp'].forEach(i=>$(i).oninput=mpv);
+$('mf').onchange=async()=>{ const f=$('mf').files[0]; if(!f) return; E.newPdf=new Uint8Array(await f.arrayBuffer()); $('pdfnow').textContent='(nuovo: '+f.name+')'; $('qp').value=1; await loadPage(E.newPdf); };
+async function loadPage(bytes){
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc='lib/pdf.worker.min.js';
+    if(!bytes) bytes=new Uint8Array(await (await (await getFile(E.m.pdf)).blob()).arrayBuffer());
+    pg.pdfDoc=await pdfjsLib.getDocument({data:bytes.slice()}).promise; await drawPage();
+  }catch(e){ L2('Impossibile leggere il PDF: '+e.message); }
+}
+async function drawPage(){
+  if(!pg.pdfDoc) return; const n=Math.min(Math.max(+$('qp').value||1,1),pg.pdfDoc.numPages); $('qp').value=n;
+  const p=await pg.pdfDoc.getPage(n), v1=p.getViewport({scale:1}); pg.w=v1.width; pg.h=v1.height; pg.scale=900/pg.w;
+  const v=p.getViewport({scale:pg.scale}), c=$('pc'); c.width=v.width; c.height=v.height; c.style.width=Math.min(420,v.width)+'px';
+  await p.render({canvasContext:c.getContext('2d'),viewport:v}).promise; $('psz').textContent=`Pagina ${n}/${pg.pdfDoc.numPages} · ${pg.w.toFixed(0)}×${pg.h.toFixed(0)} pt`;
+  fromFields(); }
+$('qp').onchange=drawPage;
+function setBox(x,y,s){ const q=E.m.qr; q.boxX=+x.toFixed(3); q.boxTop=+y.toFixed(3); q.boxSize=+s.toFixed(3); q.modSize=+(s*0.8864).toFixed(3); q.modX=+(x+s*0.0568).toFixed(3); q.modTop=+(y+s*0.0568).toFixed(3); toFields(); }
+function toFields(){ const q=E.m.qr; $('bx').value=q.boxX; $('by').value=q.boxTop; $('bs').value=q.boxSize; const r=$('pr'); r.style.display=q.boxSize>0&&q.boxX+q.boxTop>0?'block':'none';
+  r.style.left=q.boxX/pg.w*100+'%'; r.style.top=q.boxTop/pg.h*100+'%'; r.style.width=q.boxSize/pg.w*100+'%'; r.style.height=q.boxSize/pg.h*100+'%'; }
+function fromFields(){ const x=+$('bx').value||E.m.qr.boxX, y=+$('by').value||E.m.qr.boxTop, s=+$('bs').value||E.m.qr.boxSize; setBox(x,y,s); }
+['bx','by','bs'].forEach(i=>$(i).oninput=fromFields);
+let drag=null;
+$('pw').addEventListener('pointerdown',e=>{ if(!pg.pdfDoc) return; const r=$('pc').getBoundingClientRect(); drag={x:(e.clientX-r.left)/r.width*pg.w,y:(e.clientY-r.top)/r.height*pg.h}; $('pw').setPointerCapture(e.pointerId); setBox(drag.x,drag.y,1); });
+$('pw').addEventListener('pointermove',e=>{ if(!drag) return; const r=$('pc').getBoundingClientRect(); const x=(e.clientX-r.left)/r.width*pg.w,y=(e.clientY-r.top)/r.height*pg.h; const s=Math.max(Math.abs(x-drag.x),Math.abs(y-drag.y),4); setBox(x<drag.x?drag.x-s:drag.x,y<drag.y?drag.y-s:drag.y,s); });
+$('pw').addEventListener('pointerup',()=>{ if(!drag) return; drag=null; autoColors(); });
+function autoColors(){ const q=E.m.qr, c=$('pc'), ctx=c.getContext('2d'), k=pg.scale; const o=1.5,pts=[[q.boxX+o,q.boxTop+o],[q.boxX+q.boxSize-o,q.boxTop+o],[q.boxX+o,q.boxTop+q.boxSize-o],[q.boxX+q.boxSize-o,q.boxTop+q.boxSize-o]].map(([x,y])=>[Math.min(Math.max(x,0),pg.w-1),Math.min(Math.max(y,0),pg.h-1)]);
+  let R=0,G=0,B=0; pts.forEach(([x,y])=>{ const d=ctx.getImageData(Math.round(x*k),Math.round(y*k),1,1).data; R+=d[0];G+=d[1];B+=d[2]; }); R=Math.round(R/4);G=Math.round(G/4);B=Math.round(B/4);
+  const h=n=>n.toString(16).padStart(2,'0'); q.boxColor='#'+h(R)+h(G)+h(B); const lum=(0.2126*R+0.7152*G+0.0722*B)/255; q.dark=lum>0.5?'#1E1E1C':'#FFFFFF'; $('cb').value=q.boxColor; $('cd').value=q.dark; }
+$('cb').oninput=()=>E.m.qr.boxColor=$('cb').value; $('cd').oninput=()=>E.m.qr.dark=$('cd').value;
+function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msg=$('mm').value;
+  q.page=(+$('qp').value||1)-1; q.label={l1:$('l1').value.trim(),addr:$('la').checked,color:$('lc').value,size:+$('ls').value||5.8}; q.boxColor=$('cb').value; q.dark=$('cd').value;
+  if(!m.title) throw new Error('Inserisci il titolo.'); if(!m.page) throw new Error('Inserisci il nome pagina.'); if(!(q.boxSize>0)||(q.boxX+q.boxTop)<=0) throw new Error('Disegna il riquadro del QR sul PDF.'); return m; }
+$('prevb').onclick=async()=>{ try{ const m=collect(); const mm=JSON.parse(JSON.stringify(m));
+  let url; if(E.newPdf){ url=URL.createObjectURL(new Blob([E.newPdf],{type:'application/pdf'})); } else { if(!m.pdf) throw new Error('Carica il PDF.'); url=m.pdf; } mm.pdf=url;
+  const site='https://mariarossi.consulente.widiba.it'; const bytes=await makePdf(mm,site+'/'+m.page,site); const cv=await pdfToCanvases(bytes,1.4);
+  $('prv').innerHTML=''; const q=mm.qr.page||0; const im=new Image(); im.src=cv[q].toDataURL('image/jpeg',0.85); $('prv').appendChild(im); }catch(e){ $('prv').textContent='Errore: '+e.message; } };
+$('savem').onclick=async()=>{ try{
+  const m=collect(); if(E.isNew&&!E.newPdf) throw new Error('Carica il file PDF.');
+  if(!MATS) throw new Error('Premi prima “Carica elenco da GitHub”.');
+  if(E.isNew){ let id=slug(m.title), n=2; while(MATS.some(x=>x.id===id)) id=slug(m.title)+'-'+n++; m.id=id; m.file=m.title.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,''); m.pdf=`materials/${id}.pdf`; m.thumb=`materials/${id}.jpg`; }
+  L2('Salvataggio in corso…');
+  if(E.newPdf){ await ghPutRaw(m.pdf,bytesB64(E.newPdf),'Carica PDF '+m.title);
+    const p=await pg.pdfDoc.getPage(1), vp=p.getViewport({scale:700/p.getViewport({scale:1}).width}), c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+    await ghPutRaw(m.thumb,c.toDataURL('image/jpeg',0.85).split(',')[1],'Anteprima '+m.title); }
+  if(E.isNew) MATS.push(m); else MATS[E.idx]=m;
+  await saveJson((E.isNew?'Aggiungi materiale ':'Aggiorna materiale ')+m.title); renderList(); $('ed').style.display='none';
+}catch(e){ L2('Errore: '+e.message); } };
 </script></main></body></html>
