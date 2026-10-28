@@ -54,19 +54,22 @@
     "page": "index.html",
     "qr": {
       "page": 1,
-      "boxX": 182.345,
-      "boxTop": 324.287,
-      "boxSize": 54.815,
-      "modX": 185.458,
-      "modTop": 327.401,
-      "modSize": 48.588,
-      "boxColor": "#706f6b",
-      "dark": "#ffffff",
+      "boxX": 177.924,
+      "boxTop": 321.047,
+      "boxSize": 61.753,
+      "modX": 181.432,
+      "modTop": 324.554,
+      "modSize": 54.738,
+      "boxColor": "#f1efe9",
+      "dark": "#1e1e1c",
       "label": {
         "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
         "addr": true,
         "color": "#000000",
-        "size": 7
+        "size": 7,
+        "gap": 13,
+        "lead": 10.5,
+        "dx": 0
       },
       "covers": []
     },
