@@ -1,42 +1,127 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Admin – genera cf.json</title>
+<meta name="robots" content="noindex,nofollow"><title>Admin – CF HUB materiali</title>
 <style>
-body{font:15px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#F5F0EA;color:#6A4649;margin:0}
-main{max-width:720px;margin:0 auto;padding:24px 16px}
-h1{font-weight:400}.card{background:#FBFAF7;border:1px solid #CBC2C0;border-radius:12px;padding:16px;margin-bottom:14px}
-label{display:block;font-weight:600;margin:10px 0 4px}input[type=text]{width:100%;padding:10px;border:1px solid #CBC2C0;border-radius:8px;font:inherit}
-button{background:#D03F65;color:#fff;border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
-pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto}
+body{font:15px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#F2EFE8;color:#2C2E37;margin:0}
+main{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+h1{font-weight:400;margin:0 0 14px}h2{font-size:17px;margin:0 0 8px}
+.card{background:#FBFAF7;border:1px solid #DDD6CA;border-radius:12px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:10px 0 4px;font-size:13px}
+input[type=text],input[type=password],textarea{width:100%;padding:9px 10px;border:1px solid #CBC2C0;border-radius:8px;font:inherit}
+textarea{min-height:90px}
+.g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+button{background:#2C2E37;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;margin:12px 8px 0 0}
+button.s{background:#fff;color:#2C2E37;border:1.5px solid #2C2E37}
+pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto;margin:10px 0 0}
+small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
+.mat{border-top:1px solid #DDD6CA;margin-top:14px;padding-top:6px}
 </style></head><body><main>
-<h1>Admin – genera <code>cf.json</code></h1>
+<h1>Admin – CF HUB materiali</h1>
+
 <div class="card">
- <p>Carica l'Excel (colonne: <b>Email</b>, <b>Dominio</b>, <b>Stato Sito</b>). Il file viene elaborato solo nel tuo browser; nessun dato viene inviato.
- Il <code>cf.json</code> contiene solo l'hash dell'email e l'URL del sito: nessun nome né email in chiaro.</p>
- <label>File Excel</label><input id="f" type="file" accept=".xlsx,.xls,.csv">
- <label>Nome pagina (dopo l'URL del sito)</label><input id="page" type="text" value="investi2026">
- <label>Domini email ammessi (separati da virgola)</label><input id="dom" type="text" value="pfwidiba.it,cfwidiba.it">
- <button id="go">Genera e scarica cf.json</button>
+ <h2>1 · Collegamento a GitHub</h2>
+ <small>Serve per salvare le modifiche direttamente nel repository, senza scaricare e ricaricare i file a mano. Crea un <b>token fine-grained</b> su GitHub (Settings → Developer settings → Fine-grained tokens) limitato a <b>questo solo repository</b>, permesso <b>Contents: Read and write</b>. Il token resta solo in questo browser (se spunti “ricorda”), non viene mai scritto nel repository.</small>
+ <div class="g"><div><label>Utente / organizzazione</label><input id="o" type="text" placeholder="es. widiba-rete"></div>
+ <div><label>Repository</label><input id="r" type="text" placeholder="es. flyer-tool"></div>
+ <div><label>Branch</label><input id="b" type="text" value="main"></div></div>
+ <label>Token</label><input id="t" type="password" autocomplete="off" placeholder="github_pat_…">
+ <label style="font-weight:400"><input id="rem" type="checkbox"> ricorda su questo browser</label>
+ <button class="s" id="test">Verifica collegamento</button><pre id="log0" style="display:none"></pre>
 </div>
-<div class="card"><b>Esito</b><pre id="log">In attesa del file…</pre></div>
+
+<div class="card">
+ <h2>2 · Elenco CF (<code>cf.json</code>)</h2>
+ <small>Carica l’Excel (colonne: Email, Dominio, Stato Sito, Nome, Cognome; facoltativa: <b>Codice Fiscale</b> o <b>Sesso</b> per il genere). Senza codice fiscale il genere è dedotto dal nome: verifica l’elenco “da controllare” e correggi con le eccezioni.</small>
+ <label>File Excel</label><input id="f" type="file" accept=".xlsx,.xls,.csv">
+ <label>Domini email ammessi (separati da virgola)</label><input id="dom" type="text" value="pfwidiba.it,cfwidiba.it">
+ <label>Eccezioni sul genere (una per riga: <code>nome.cognome=F</code> oppure <code>=M</code>, parte prima della @ dell’email)</label><textarea id="exc" placeholder="mario.rossi=M"></textarea>
+ <button id="gen">Genera e pubblica su GitHub</button><button class="s" id="genl">Solo scarica cf.json</button>
+ <pre id="log">In attesa del file…</pre>
+</div>
+
+<div class="card">
+ <h2>3 · Materiali e messaggio WhatsApp (<code>materials.json</code>)</h2>
+ <small>Segnaposto nel messaggio: <code>{nome}</code> <code>{cognome}</code> <code>{ruolo}</code> (Consulente Finanziario/Finanziaria) <code>{ruolo_min}</code> <code>{sito}</code> <code>{link}</code>. Il CF potrà comunque modificare il testo prima di inviarlo.</small><br>
+ <button class="s" id="load">Carica da GitHub</button><button class="s" id="loadl" >…oppure da file</button><input id="lf" type="file" accept=".json" style="display:none">
+ <div id="mats"></div>
+ <div id="mbtn" style="display:none"><button id="save">Salva su GitHub</button><button class="s" id="savel">Solo scarica materials.json</button></div>
+ <pre id="log2" style="display:none"></pre>
+</div>
+
 <script src="lib/xlsx.full.min.js"></script><script src="common.js"></script>
 <script>
-const $=id=>document.getElementById(id), log=t=>$('log').textContent=t;
-$('go').onclick=async()=>{
-  const f=$('f').files[0]; if(!f) return log('Scegli prima il file Excel.');
+const $=id=>document.getElementById(id);
+try{ const s=JSON.parse(localStorage.getItem('cfhub_gh')||'{}'); for(const k of ['o','r','b','t']) if(s[k]) $(k).value=s[k]; if(s.t) $('rem').checked=true; }catch(e){}
+const cfgGh=()=>{ const v={o:$('o').value.trim(),r:$('r').value.trim(),b:$('b').value.trim()||'main',t:$('t').value.trim()};
+  if(!v.o||!v.r||!v.t) throw new Error('Compila utente, repository e token (punto 1).');
+  try{ if($('rem').checked) localStorage.setItem('cfhub_gh',JSON.stringify(v)); else localStorage.removeItem('cfhub_gh'); }catch(e){}
+  return v; };
+const b64=t=>btoa(unescape(encodeURIComponent(t)));
+const unb64=t=>decodeURIComponent(escape(atob(t.replace(/\n/g,''))));
+async function ghGet(path){ const c=cfgGh();
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}?ref=${encodeURIComponent(c.b)}`,{headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json'}});
+  if(r.status===404) return null; if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
+  const j=await r.json(); return {sha:j.sha,text:unb64(j.content)}; }
+async function ghPut(path,text,msg){ const c=cfgGh(); const cur=await ghGet(path);
+  const body={message:msg,content:b64(text),branch:c.b}; if(cur) body.sha=cur.sha;
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`,{method:'PUT',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,200)); return true; }
+function dl(name,text){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'})); a.download=name; a.click(); }
+
+$('test').onclick=async()=>{ const L=$('log0'); L.style.display='block'; try{ const c=cfgGh();
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}`,{headers:{Authorization:'Bearer '+c.t}}); const j=await r.json();
+  L.textContent=r.ok?`OK: ${j.full_name} (${j.private?'privato':'pubblico'}). Permesso di scrittura: ${j.permissions&&j.permissions.push?'sì':'NO – controlla il token'}`:`Errore ${r.status}: ${j.message}`; }catch(e){ L.textContent=e.message; } };
+
+/* ---- genere ---- */
+const M_A=new Set(['andrea','elia','gianluca','luca','mattia','nicola','jonata','tobia','mirko','saba'.slice(0,0)].filter(Boolean));
+const F_OTHER=new Set(['rachele','carmen','beatrice','ilenia','noemi','ester','judith','miriam','alice','irene','chloe','marlene','giulietta','luce','fiorenza'.slice(0,0)].filter(Boolean));
+function fromCF(cf){ cf=String(cf||'').trim().toUpperCase(); if(!/^[A-Z]{6}\d{2}[A-Z]\d{2}/.test(cf)) return null; return parseInt(cf.substr(9,2),10)>40?'F':'M'; }
+function guess(first){ const n=first.toLowerCase().split(/[\s']/)[0]; if(M_A.has(n)) return 'M'; if(F_OTHER.has(n)) return 'F'; return n.endsWith('a')?'F':'M'; }
+const title=s=>{ s=String(s||'').trim(); return s===s.toUpperCase()?s.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu,(x,a,b)=>a+b.toUpperCase()):s; };
+
+async function build(){
+  const f=$('f').files[0]; if(!f) throw new Error('Scegli prima il file Excel.');
   const wb=XLSX.read(await f.arrayBuffer()); const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
   const domains=$('dom').value.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const exc={}; $('exc').value.split('\n').forEach(l=>{ const m=l.trim().match(/^([^=\s]+)\s*=\s*([MFmf])$/); if(m) exc[m[1].toLowerCase()]=m[2].toUpperCase(); });
   const salt=[...crypto.getRandomValues(new Uint8Array(12))].map(x=>x.toString(16).padStart(2,'0')).join('');
-  const items={}, skipped=[]; let maint=0;
+  const pick=(r,...ks)=>{ for(const k of Object.keys(r)) if(ks.includes(k.trim().toLowerCase())) return r[k]; return ''; };
+  const items={}, skipped=[], review=[]; let maint=0,nm=0,nf=0,fromcf=0;
   for(const r of rows){
-    const em=String(r['Email']||'').trim().toLowerCase(), dom=String(r['Dominio']||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+    const em=String(pick(r,'email')).trim().toLowerCase(), dom=String(pick(r,'dominio')).trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
     const [loc,d]=em.split('@');
     if(!loc||!d||!domains.includes(d)||!dom){ skipped.push(em||'(vuota)'); continue; }
-    const it={u:'https://'+dom}; if(/manutenzione/i.test(r['Stato Sito'])){it.m=1;maint++;}
+    const nome=title(pick(r,'nome')), cogn=title(pick(r,'cognome'));
+    let g=exc[loc]; const sx=String(pick(r,'sesso','genere')).trim().toUpperCase()[0];
+    if(!g && (sx==='M'||sx==='F')){ g=sx; fromcf++; }
+    if(!g){ const c=fromCF(pick(r,'codice fiscale','codicefiscale','cf')); if(c){ g=c; fromcf++; } }
+    if(!g){ g=guess(nome); if(!/[aoei]$/i.test(nome.split(/\s/)[0])||M_A.has(nome.toLowerCase())||F_OTHER.has(nome.toLowerCase())) review.push(`${nome} ${cogn} → ${g}`); }
+    g==='F'?nf++:nm++;
+    const it={u:'https://'+dom,n:nome,c:cogn,g}; if(/manutenzione/i.test(pick(r,'stato sito'))){it.m=1;maint++;}
     items[await keyOf(salt,loc)]=it;
   }
-  const out={salt,page:$('page').value.trim().replace(/^\/+/,''),domains,items};
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'})); a.download='cf.json'; a.click();
-  log(`cf.json generato.\nConsulenti inclusi: ${Object.keys(items).length} (di cui in manutenzione: ${maint})\nEsclusi: ${skipped.length}\n${skipped.join('\n')}\n\nCarica cf.json nella cartella del repository GitHub sostituendo quello esistente.`);
-};
+  const out={salt,domains,items};
+  const rep=`Consulenti inclusi: ${Object.keys(items).length} (in manutenzione: ${maint})\nGenere: ${nm} M · ${nf} F (${fromcf} da codice fiscale/sesso, il resto dedotto dal nome)\nEsclusi: ${skipped.length}${skipped.length?'\n'+skipped.join('\n'):''}\nDa controllare (dedotti dal nome):\n${review.join('\n')||'—'}`;
+  return {json:JSON.stringify(out),rep};
+}
+$('genl').onclick=async()=>{ try{ const {json,rep}=await build(); dl('cf.json',json); $('log').textContent=rep; }catch(e){ $('log').textContent=e.message; } };
+$('gen').onclick=async()=>{ try{ const {json,rep}=await build(); $('log').textContent=rep+'\n\nPubblico su GitHub…'; await ghPut('cf.json',json,'Aggiorna elenco CF (da admin)'); $('log').textContent=rep+'\n\n✓ cf.json pubblicato. Online entro circa 1-2 minuti.'; }catch(e){ $('log').textContent='Errore: '+e.message; } };
+
+/* ---- materiali ---- */
+let MATS=null;
+function renderMats(){ $('mats').innerHTML=MATS.map((m,i)=>`<div class="mat"><b>${m.title}</b> <small>(${m.id})</small>
+ <label>Titolo</label><input type="text" data-i="${i}" data-k="title" value="${(m.title||'').replace(/"/g,'&quot;')}">
+ <label>Descrizione</label><textarea data-i="${i}" data-k="desc">${m.desc||''}</textarea>
+ <label>Nome pagina sul sito del CF</label><input type="text" data-i="${i}" data-k="page" value="${m.page||''}">
+ <label>Messaggio WhatsApp</label><textarea data-i="${i}" data-k="msg" style="min-height:120px">${m.msg||''}</textarea>
+ <small>Anteprima: <span id="pv${i}"></span></small></div>`).join('');
+  document.querySelectorAll('#mats [data-k]').forEach(el=>el.oninput=()=>{ MATS[el.dataset.i][el.dataset.k]=el.value; prev(el.dataset.i); });
+  MATS.forEach((m,i)=>prev(i)); $('mbtn').style.display='block'; }
+function prev(i){ const m=MATS[i]; const t=(m.msg||'').replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+(m.page||'')}[k]||x)); $('pv'+i).textContent=t; }
+const L2=t=>{ $('log2').style.display='block'; $('log2').textContent=t; };
+$('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); if(!r) throw new Error('materials.json non trovato nel repository.'); MATS=JSON.parse(r.text); renderMats(); L2('Caricato da GitHub.'); }catch(e){ L2('Errore: '+e.message); } };
+$('loadl').onclick=()=>$('lf').click();
+$('lf').onchange=async()=>{ try{ MATS=JSON.parse(await $('lf').files[0].text()); renderMats(); L2('Caricato dal file.'); }catch(e){ L2('Errore: '+e.message); } };
+$('save').onclick=async()=>{ try{ await ghPut('materials.json',JSON.stringify(MATS,null,2),'Aggiorna materiali e messaggi (da admin)'); L2('✓ materials.json pubblicato. Online entro circa 1-2 minuti.'); }catch(e){ L2('Errore: '+e.message); } };
+$('savel').onclick=()=>dl('materials.json',JSON.stringify(MATS,null,2));
 </script></main></body></html>

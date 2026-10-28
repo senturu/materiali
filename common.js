@@ -1,9 +1,5 @@
 // Funzioni condivise: hash, QR, PDF
-const BROCHURE = 'brochure.pdf';
-// Posizione del QR sulla pagina 1 (punti PDF, origine in alto a sinistra)
-const QR = { boxX:178.583, boxTop:432.327, boxSize:62.358, modX:182.126, modTop:435.869, modSize:55.276,
-             boxColor:[0xF1/255,0xEF/255,0xE9/255], dark:[0x1E/255,0x1E/255,0x1C/255] };
-
+const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255);
 async function getFile(u, opt){
   if(location.protocol==='file:') throw new Error('La pagina è aperta dal computer (file://). Usa il link pubblicato su GitHub Pages (https://…github.io/…).');
   let r; try{ r=await fetch(u,opt); }catch(e){ throw new Error('Impossibile caricare «'+u+'». Controlla la connessione e che il file sia nel repository.'); }
@@ -24,32 +20,32 @@ function parseEmail(v, domains){
   return {local:m[1]};
 }
 
-async function makePdf(url, site){
-  const bytes = await (await getFile(BROCHURE)).arrayBuffer();
+async function makePdf(m, url, site){
+  const Q=m.qr, bytes = await (await getFile(m.pdf)).arrayBuffer();
   const { PDFDocument, rgb } = PDFLib;
   const doc = await PDFDocument.load(bytes);
-  const page = doc.getPage(0);
-  const H = page.getHeight();
-  page.drawRectangle({ x:QR.boxX, y:H-QR.boxTop-QR.boxSize, width:QR.boxSize, height:QR.boxSize, color:rgb(...QR.boxColor) });
+  const page = doc.getPage(0), H = page.getHeight();
+  page.drawRectangle({ x:Q.boxX, y:H-Q.boxTop-Q.boxSize, width:Q.boxSize, height:Q.boxSize, color:rgb(...hex(Q.boxColor)) });
   const qr = qrcode(0,'M'); qr.addData(url); qr.make();
-  const n = qr.getModuleCount(), s = QR.modSize/n;
+  const n = qr.getModuleCount(), s = Q.modSize/n;
   for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(qr.isDark(r,c))
-    page.drawRectangle({ x:QR.modX+c*s-0.02, y:H-QR.modTop-(r+1)*s-0.02, width:s+0.04, height:s+0.04, color:rgb(...QR.dark) });
-  // scritte sotto il QR
-  doc.registerFontkit(fontkit);
-  const ld = async f=>doc.embedFont(await (await getFile('fonts/'+f)).arrayBuffer());
-  const font = await ld('Widiba-Medium.ttf'), font2 = await ld('Widiba-Regular.ttf');
-  const cxm = QR.boxX+QR.boxSize/2, yb = H-QR.boxTop-QR.boxSize;
-  const txt='INQUADRA IL QR CODE E VAI AL MIO SITO', sz=5.8, cs=1.0;
-  const tw = font.widthOfTextAtSize(txt,sz)+cs*(txt.length-1);
-  let cx=cxm-tw/2;
-  for(const ch of txt){ page.drawText(ch,{x:cx,y:yb-9,size:sz,font,color:rgb(1,1,1)}); cx+=font.widthOfTextAtSize(ch,sz)+cs; }
-  const addr = site.replace(/^https?:\/\//,'').replace(/\/+$/,''), sz2=7;
-  page.drawText(addr,{x:cxm-font2.widthOfTextAtSize(addr,sz2)/2,y:yb-19.5,size:sz2,font:font2,color:rgb(1,1,1)});
-  const ty = yb-22;
-  // area cliccabile: QR + scritta
+    page.drawRectangle({ x:Q.modX+c*s-0.02, y:H-Q.modTop-(r+1)*s-0.02, width:s+0.04, height:s+0.04, color:rgb(...hex(Q.dark)) });
+  const cxm = Q.boxX+Q.boxSize/2, yb = H-Q.boxTop-Q.boxSize;
+  let tw=0, ty=yb;
+  if(Q.label){
+    doc.registerFontkit(fontkit);
+    const ld = async f=>doc.embedFont(await (await getFile('fonts/'+f)).arrayBuffer());
+    const font = await ld('Widiba-Medium.ttf'), font2 = await ld('Widiba-Regular.ttf');
+    const txt='INQUADRA IL QR CODE E VAI AL MIO SITO', sz=5.8, cs=1.0;
+    tw = font.widthOfTextAtSize(txt,sz)+cs*(txt.length-1);
+    let cx=cxm-tw/2;
+    for(const ch of txt){ page.drawText(ch,{x:cx,y:yb-9,size:sz,font,color:rgb(1,1,1)}); cx+=font.widthOfTextAtSize(ch,sz)+cs; }
+    const addr = site.replace(/^https?:\/\//,'').replace(/\/+$/,''), sz2=7;
+    page.drawText(addr,{x:cxm-font2.widthOfTextAtSize(addr,sz2)/2,y:yb-19.5,size:sz2,font:font2,color:rgb(1,1,1)});
+    ty=yb-22;
+  }
   const ctx=doc.context;
-  const link=ctx.obj({Type:'Annot',Subtype:'Link',Rect:[Math.min(QR.boxX-4,cxm-tw/2-4),ty,Math.max(QR.boxX+QR.boxSize+4,cxm+tw/2+4),H-QR.boxTop],Border:[0,0,0],
+  const link=ctx.obj({Type:'Annot',Subtype:'Link',Rect:[Math.min(Q.boxX-4,cxm-tw/2-4),ty,Math.max(Q.boxX+Q.boxSize+4,cxm+tw/2+4),H-Q.boxTop],Border:[0,0,0],
     A:{Type:'Action',S:'URI',URI:PDFLib.PDFString.of(url)}});
   page.node.set(PDFLib.PDFName.of('Annots'), ctx.obj([ctx.register(link)]));
   return await doc.save();

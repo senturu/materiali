@@ -1,11 +1,22 @@
-TOOL BROCHURE INVESTI CON WIDIBA
-File nella stessa cartella del repository GitHub (tutti insieme, come sono):
- index.html  -> pagina per i CF (link da condividere)
- admin.html  -> solo per te: carica l'Excel e genera cf.json (non linkarla)
- cf.json, brochure.pdf, common.js, lib/
+CF HUB - MATERIALI PERSONALIZZABILI (flyer con QR del CF)
+Tutti i file stanno nella stessa cartella del repository GitHub:
+ index.html      pagina per i CF (link da condividere)
+ admin.html      solo per te: carica l'Excel e genera cf.json (non linkarla)
+ cf.json         elenco CF (hash dell'email + URL del sito)
+ materials.json  catalogo dei materiali (vedi sotto)
+ materials/      PDF e anteprime dei materiali
+ common.js, fonts/, img/, lib/
 
 Pubblicazione: repo GitHub > Settings > Pages > Deploy from branch (main, /root).
-Link CF:  https://<utente>.github.io/<repo>/
-Aggiornare i CF: apri admin.html, carica l'Excel, scarica cf.json e sostituiscilo nel repo.
-Cambiare brochure: sostituisci brochure.pdf (stesso nome, QR su pagina 1 nella stessa posizione).
-Cambiare nome pagina: campo "Nome pagina" in admin.html.
+Aggiornare i CF e i messaggi: apri admin.html, collega GitHub (token fine-grained limitato a questo repository, permesso
+Contents: Read and write), carica l'Excel e premi "Genera e pubblica": il file viene salvato direttamente nel repository.
+Stesso per il testo del messaggio WhatsApp (sezione 3). Le modifiche sono online dopo circa 1-2 minuti.
+Genere dei CF: dal codice fiscale o dalla colonna "Sesso" dell'Excel se presenti, altrimenti dedotto dal nome (controlla l'elenco "da controllare" e usa le eccezioni).
+
+AGGIUNGERE UN NUOVO MATERIALE
+1. Metti il PDF in materials/ e una anteprima JPG (pagina 1) accanto.
+2. Aggiungi un blocco in materials.json copiando quello esistente: id, title, desc, cat (categoria), pdf, thumb,
+   file (nome del file scaricato), page (nome pagina sul sito del CF), qr (posizione del QR in punti PDF, origine in alto a sinistra:
+   boxX/boxTop = angolo del riquadro, boxSize = lato, modX/modTop/modSize = area dei moduli scuri; boxColor/dark = colori;
+   label = true per aggiungere la scritta "INQUADRA IL QR CODE..." e l'indirizzo sotto il QR).
+3. Carica i file nel repository. Nessuna modifica al codice.

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "investi",
+    "title": "Flyer Investi con Widiba",
+    "desc": "Investi nuova liquidità e ottieni il rimborso del bollo per tutto il 2027. Il QR porta i tuoi clienti alla pagina dell’iniziativa sul tuo sito.",
+    "cat": "Commerciale",
+    "pdf": "materials/investi.pdf",
+    "thumb": "materials/investi.jpg",
+    "file": "Investi_con_Widiba_flyer",
+    "page": "investi2026",
+    "qr": {
+      "boxX": 178.583,
+      "boxTop": 432.327,
+      "boxSize": 62.358,
+      "modX": 182.126,
+      "modTop": 435.869,
+      "modSize": 55.276,
+      "boxColor": "#F1EFE9",
+      "dark": "#1E1E1C",
+      "label": true
+    },
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. Con “Investi con Widiba”, se porti nuova liquidità e investi, puoi ottenere il rimborso dell’imposta di bollo per tutto il 2027. Qui trovi come funziona: {link}"
+  }
+]
