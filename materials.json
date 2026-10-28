@@ -9,12 +9,12 @@
     "file": "Investi_con_Widiba_flyer",
     "page": "investi-nuova-liquidita-e-ti-rimborsiamo-il-bollo-per-tutto-il-2027-1HCAA",
     "qr": {
-      "boxX": 178.968,
-      "boxTop": 431.855,
-      "boxSize": 60.812,
-      "modX": 182.422,
-      "modTop": 435.309,
-      "modSize": 53.904,
+      "boxX": 179,
+      "boxTop": 432.5,
+      "boxSize": 60.3,
+      "modX": 182.425,
+      "modTop": 435.925,
+      "modSize": 53.45,
       "boxColor": "#f1efe9",
       "dark": "#1e1e1c",
       "label": {
@@ -23,36 +23,66 @@
         "color": "#ffffff",
         "size": 5.8
       },
-      "page": 0
+      "page": 0,
+      "covers": []
     },
-    "msg": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “*Investi con Widiba*” il bollo sui tuoi investimenti di tutto il 2027 ti viene rimborsato!\n\nTi ho preparato un riepilogo chiaro con le condizioni: {link}\n\nSe vuoi lo vediamo insieme con calma. \nA presto, _{nome}_, {ruolo} di Banca Widiba"
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi scrivo perché c’è un’iniziativa che può interessarti: con *Investi con Widiba*, se porti nuova liquidità e la investi, puoi ottenere il rimborso dell’imposta di bollo di tutto il 2027.\n\nQui trovi come funziona: {link}\n\nSe vuoi, valutiamo insieme se fa al caso tuo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni, requisiti e limiti nel Regolamento dell’iniziativa._",
+    "msgs": [
+      {
+        "l": "Consulenziale",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi scrivo perché c’è un’iniziativa che può interessarti: con *Investi con Widiba*, se porti nuova liquidità e la investi, puoi ottenere il rimborso dell’imposta di bollo di tutto il 2027.\n\nQui trovi come funziona: {link}\n\nSe vuoi, valutiamo insieme se fa al caso tuo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni, requisiti e limiti nel Regolamento dell’iniziativa._"
+      },
+      {
+        "l": "Diretto",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. Con *Investi con Widiba* puoi farti rimborsare l’imposta di bollo sui tuoi investimenti per tutto il 2027, se porti nuova liquidità (minimo 25.000 €). Dettagli e condizioni qui: {link}\n\nTi va di sentirci per capire se fa per te?"
+      },
+      {
+        "l": "Empatico",
+        "t": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “*Investi con Widiba*” il bollo sui tuoi investimenti di tutto il 2027 ti viene rimborsato!\n\nTi ho preparato un riepilogo chiaro con le condizioni: {link}\n\nSe vuoi lo vediamo insieme con calma. \nA presto, _{nome}_, {ruolo} di Banca Widiba"
+      }
+    ]
   },
   {
     "id": "la-completezza-che-crea-valore",
     "title": "La completezza che crea valore",
     "desc": "Una Banca che ti accompagna nella gestione della liquidità e nelle scelte di investimento, con il supporto di un Consulente Finanziario dedicato.",
     "cat": "Commerciale",
-    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nOggi l’offerta di Banca Widiba è ancora più completa e competitiva: *una sola banca per gestire la liquidità di oggi e i progetti di domani*.\n\nUn conto con canone gratuito per 12 mesi, condizioni dedicate a chi porta nuova liquidità e la possibilità, con “Investi con Widiba”, di ottenere il rimborso dell’imposta di bollo. Passare a noi è facile, con la portabilità gratuita WidiExpress.\n\nTrovi tutti i dettagli qui: {link}\n\nSe vuoi, ne parliamo insieme.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi e nei regolamenti su widiba.it._",
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nOggi l’offerta di Banca Widiba è ancora più completa e competitiva: *una sola banca per gestire la liquidità di oggi e i progetti di domani*.\n\nUn conto con canone gratuito per 12 mesi, condizioni dedicate a chi porta nuova liquidità e la possibilità, con “Investi con Widiba”, di ottenere il rimborso dell’imposta di bollo per tutto il 2027!\n\nE passare in Banca Widiba è facilissimo con la portabilità gratuita WidiExpress.\n\nTrovi tutti i dettagli qui: {link}\n\nSe vuoi, ne parliamo insieme.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi e nei regolamenti su widiba.it._",
     "page": "index.html",
     "qr": {
       "page": 1,
-      "boxX": 180.215,
-      "boxTop": 324.181,
-      "boxSize": 57.022,
-      "modX": 183.454,
-      "modTop": 327.42,
-      "modSize": 50.544,
-      "boxColor": "#9e9c98",
-      "dark": "#1e1e1c",
+      "boxX": 182.345,
+      "boxTop": 324.287,
+      "boxSize": 54.815,
+      "modX": 185.458,
+      "modTop": 327.401,
+      "modSize": 48.588,
+      "boxColor": "#706f6b",
+      "dark": "#ffffff",
       "label": {
         "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
         "addr": true,
         "color": "#000000",
         "size": 7
-      }
+      },
+      "covers": []
     },
     "file": "La_completezza_che_crea_valore",
     "pdf": "materials/la-completezza-che-crea-valore.pdf",
-    "thumb": "materials/la-completezza-che-crea-valore.jpg"
+    "thumb": "materials/la-completezza-che-crea-valore.jpg",
+    "msgs": [
+      {
+        "l": "Completo",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nOggi l’offerta di Banca Widiba è ancora più completa e competitiva: *una sola banca per gestire la liquidità di oggi e i progetti di domani*.\n\nUn conto con canone gratuito per 12 mesi, condizioni dedicate a chi porta nuova liquidità e la possibilità, con “Investi con Widiba”, di ottenere il rimborso dell’imposta di bollo per tutto il 2027!\n\nE passare in Banca Widiba è facilissimo con la portabilità gratuita WidiExpress.\n\nTrovi tutti i dettagli qui: {link}\n\nSe vuoi, ne parliamo insieme.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi e nei regolamenti su widiba.it._"
+      },
+      {
+        "l": "Breve e diretto",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. \n\nOggi l’offerta Widiba è ancora più completa: una sola banca per gestire la liquidità di oggi e i progetti di domani. \n\nQui trovi i dettagli: {link}\n\nSe ti va, ne parliamo insieme."
+      },
+      {
+        "l": "Empatico",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi è mai capitato di pensare che cambiare banca sia complicato? \n\nCon Banca Widiba è più semplice di quanto sembri: con il servizio gratuito *WidiExpress* compili un modulo online e noi ci occupiamo del trasferimento di bonifici, accrediti, addebiti automatici, stipendio o pensione.\n\nE hai un Consulente Finanziario dedicato che ti segue nella gestione della liquidità e nelle scelte di investimento: *una sola banca per la liquidità di oggi e i progetti di domani*.\n\nTutti i dettagli qui: {link}\n\nSe vuoi, ti accompagno io passo dopo passo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi su widiba.it._"
+      }
+    ]
   }
 ]
