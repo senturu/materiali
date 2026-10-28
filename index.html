@@ -34,6 +34,12 @@ h1 b{font-weight:500}
 label{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;margin-bottom:8px;color:var(--ink)}
 input{width:100%;font:inherit;font-size:17px;padding:14px 15px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
 input:focus,textarea:focus{outline:none;border-color:var(--ink)}
+#msgtxt{width:100%;min-height:150px;font:inherit;font-size:15px;line-height:1.5;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+#msgtxt:focus{outline:none;border-color:var(--ink)}
+.fld{background:#E4EEE9;border-radius:4px;padding:1px 4px;color:#25483a}
+.fld.lnk{background:#E9E4EE;color:#3d2c52;user-select:none;-webkit-user-select:none;cursor:not-allowed}
+.legend{font-size:12px;color:var(--txt);margin:-2px 0 8px}
+label.chk{display:flex;align-items:center;gap:8px;font-weight:400;font-size:13.5px;letter-spacing:0;text-transform:none;margin:12px 0 0}label.chk input{width:auto}
 textarea{width:100%;font:inherit;font-size:15px;line-height:1.4;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);resize:vertical}
 .hint{font-size:13px;color:var(--txt);margin:8px 2px 0}
 /* bottoni sobri */
@@ -121,8 +127,10 @@ textarea{width:100%;font:inherit;font-size:15px;line-height:1.4;padding:12px 14p
     </div>
     <div class="warn" id="warn">Il tuo sito risulta in “Modalità manutenzione”: controlla che la pagina sia online prima di condividere il flyer.</div>
     <div class="card" style="margin-top:14px">
-     <label for="msgtxt">Messaggio per WhatsApp (puoi modificarlo)</label>
-     <textarea id="msgtxt" rows="6"></textarea>
+     <label>Messaggio per WhatsApp</label>
+     <div class="legend"><span class="fld">campi precompilati</span> modificabili · <span class="fld lnk">link</span> bloccato</div>
+     <div id="msgtxt" contenteditable="true" spellcheck="true"></div>
+     <label class="chk"><input type="checkbox" id="att" checked> Allega le immagini del flyer</label>
      <div class="row" style="margin-top:10px"><button class="pill" id="rst">Ripristina testo</button><button class="pill" id="cpm">Copia messaggio</button></div>
     </div>
     <div class="grid">
@@ -133,7 +141,7 @@ textarea{width:100%;font:inherit;font-size:15px;line-height:1.4;padding:12px 14p
      <button class="tile" id="bLong"><div class="ic"><svg viewBox="0 0 64 64"><rect x="18" y="5" width="28" height="54" rx="5"/><path class="p" d="M25 20h14M25 32h14M25 44h14"/></svg></div><span>Salva come immagine unica</span></button>
      <a class="tile" id="open" target="_blank" rel="noopener"><div class="ic"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="23"/><path class="p" d="M9 32h46"/><ellipse class="p" cx="32" cy="32" rx="10" ry="23"/></svg></div><span>Apri il mio sito</span></a>
     </div>
-    <p class="small">Il PDF è cliccabile: QR e scritta aprono il tuo sito. Da smartphone scegli WhatsApp, Mail o “Salva immagine” dal menu di condivisione.</p>
+    <p class="small">Il PDF è cliccabile: QR e scritta aprono il tuo sito. Con “Invia su WhatsApp” scegli il contatto: su alcuni telefoni WhatsApp ignora il testo quando c’è un’immagine; in quel caso premi “Copia messaggio” e incollalo.</p>
     <button id="b3" class="btn sec">Indietro ai materiali</button>
    </div>
   </div>
@@ -185,19 +193,35 @@ function renderList(){
   $('cards').querySelectorAll('.pill').forEach(b=>b.onclick=()=>make(mats.find(m=>m.id===b.dataset.id)));
 }
 
-function compose(m,url){
-  const g=me.g==='F', R=g?'Consulente Finanziaria':'Consulente Finanziario';
-  const rep={nome:me.n||'',cognome:me.c||'',ruolo:R,ruolo_min:R.toLowerCase(),sito:me.u.replace(/^https?:\/\//,''),link:url};
-  return (m.msg||'{link}').replace(/\{(\w+)\}/g,(x,k)=>k in rep?rep[k]:x).replace(/ {2,}/g,' ').trim();
+function fieldsFor(m,url){
+  const R=me.g==='F'?'Consulente Finanziaria':'Consulente Finanziario';
+  return {nome:me.n||'',cognome:me.c||'',ruolo:R,ruolo_min:R.toLowerCase(),sito:me.u.replace(/^https?:\/\//,''),link:url};
 }
+function buildEditor(m,url){
+  const rep=fieldsFor(m,url), ed=$('msgtxt'); ed.innerHTML='';
+  let hasLink=false;
+  String(m.msg||'{link}').split(/(\{\w+\})/).forEach(p=>{
+    const k=(p.match(/^\{(\w+)\}$/)||[])[1];
+    if(k && k in rep){
+      const sp=document.createElement('span'); sp.className='fld'+(k==='link'?' lnk':''); sp.textContent=rep[k]; sp.dataset.k=k;
+      if(k==='link'){ sp.contentEditable='false'; hasLink=true; }
+      ed.appendChild(sp);
+    } else if(p) ed.appendChild(document.createTextNode(p));
+  });
+  if(!hasLink){ ed.appendChild(document.createTextNode('\n')); const sp=document.createElement('span'); sp.className='fld lnk'; sp.contentEditable='false'; sp.dataset.k='link'; sp.textContent=url; ed.appendChild(sp); }
+}
+function ensureLink(){
+  const ed=$('msgtxt'); if(ed.querySelector('.lnk')) return;
+  ed.appendChild(document.createTextNode('\n')); const sp=document.createElement('span'); sp.className='fld lnk'; sp.contentEditable='false'; sp.dataset.k='link'; sp.textContent=cur.url; ed.appendChild(sp);
+}
+function msgText(){ ensureLink(); return $('msgtxt').innerText.replace(/\u00a0/g,' ').trim(); }
 async function make(m){
   $('rt').textContent=m.title; $('loading').style.display='block'; $('loading').textContent='Sto preparando il tuo flyer…'; $('done').style.display='none'; show('res');
   try{
     const url=me.u.replace(/\/+$/,'')+'/'+m.page;
     const pdf=await makePdf(m,url,me.u);
     const cv=await pdfToCanvases(pdf,2.2);
-    cur={pdf,cv,url,m,txt:compose(m,url)};
-    $('msgtxt').value=cur.txt;
+    cur={pdf,cv,url,m}; buildEditor(m,url);
     $('site').textContent=me.u.replace(/^https?:\/\//,''); $('pg').textContent='/'+m.page;
     $('prev').src=cv[0].toDataURL('image/jpeg',0.85); $('open').href=url;
     $('warn').style.display=me.m?'block':'none';
@@ -217,9 +241,20 @@ $('bCopy').onclick = async ()=>{
   catch(e){ const t=document.createElement('textarea'); t.value=cur.url; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
   $('lCopy').textContent='Link copiato ✓'; setTimeout(()=>$('lCopy').textContent='Copia il link',2000);
 };
-$('bWa').onclick = ()=> window.open('https://wa.me/?text='+encodeURIComponent($('msgtxt').value.trim()||cur.url),'_blank');
-$('rst').onclick = ()=>{ $('msgtxt').value=cur.txt; };
-$('cpm').onclick = async ()=>{ const t=$('msgtxt').value; try{ await navigator.clipboard.writeText(t); }catch(e){ $('msgtxt').select(); document.execCommand('copy'); } $('cpm').textContent='Copiato ✓'; setTimeout(()=>$('cpm').textContent='Copia messaggio',2000); };
+$('msgtxt').addEventListener('input',()=>{ if(!$('msgtxt').querySelector('.lnk')) ensureLink(); });
+$('msgtxt').addEventListener('paste',e=>{ e.preventDefault(); document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text')); });
+$('bWa').onclick = async ()=>{
+  const text=msgText();
+  if($('att').checked){
+    try{
+      const files=await Promise.all(cur.cv.map(async(c,i)=>new File([await toBlob(c)],`${cur.m.file}_${i+1}.png`,{type:'image/png'})));
+      if(navigator.canShare && navigator.canShare({files,text})){ await navigator.share({files,text}); return; }
+    }catch(e){ if(e.name==='AbortError') return; }
+  }
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+};
+$('rst').onclick = ()=> buildEditor(cur.m,cur.url);
+$('cpm').onclick = async ()=>{ const t=msgText(); try{ await navigator.clipboard.writeText(t); }catch(e){ const r=document.createRange(); r.selectNodeContents($('msgtxt')); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); sel.removeAllRanges(); } $('cpm').textContent='Copiato ✓'; setTimeout(()=>$('cpm').textContent='Copia messaggio',2000); };
 $('bPdf').onclick = ()=> out([new File([cur.pdf],cur.m.file+'.pdf',{type:'application/pdf'})]);
 $('bImgs').onclick = async ()=> out(await Promise.all(cur.cv.map(async(c,i)=>new File([await toBlob(c)],`${cur.m.file}_${i+1}.png`,{type:'image/png'}))));
 $('bLong').onclick = async ()=>{
