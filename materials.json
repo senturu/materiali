@@ -26,5 +26,33 @@
       "page": 0
     },
     "msg": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “Investi con Widiba” il bollo sui tuoi investimenti può tornare in tasca, per tutto il 2027. Ti ho preparato un riepilogo chiaro con le condizioni: {link}\nSe vuoi lo vediamo insieme con calma. {nome}, {ruolo} di Banca Widiba"
+  },
+  {
+    "id": "la-completezza-che-crea-valore",
+    "title": "La completezza che crea valore",
+    "desc": "Una Banca che ti accompagna nella gestione della liquidità e nelle scelte di investimento, con il supporto di un Consulente Finanziario dedicato.",
+    "cat": "Commerciale",
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nOggi l’offerta di Banca Widiba è ancora più completa e competitiva: *una sola banca per gestire la liquidità di oggi e i progetti di domani*.\n\nUn conto con canone gratuito per 12 mesi, condizioni dedicate a chi porta nuova liquidità e la possibilità, con “Investi con Widiba”, di ottenere il rimborso dell’imposta di bollo. Passare a noi è facile, con la portabilità gratuita WidiExpress.\n\nTrovi tutti i dettagli qui: {link}\n\nSe vuoi, ne parliamo insieme.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi e nei regolamenti su widiba.it._",
+    "page": "index.html",
+    "qr": {
+      "page": 1,
+      "boxX": 180.215,
+      "boxTop": 324.181,
+      "boxSize": 57.022,
+      "modX": 183.454,
+      "modTop": 327.42,
+      "modSize": 50.544,
+      "boxColor": "#9e9c98",
+      "dark": "#1e1e1c",
+      "label": {
+        "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
+        "addr": true,
+        "color": "#000000",
+        "size": 7
+      }
+    },
+    "file": "La_completezza_che_crea_valore",
+    "pdf": "materials/la-completezza-che-crea-valore.pdf",
+    "thumb": "materials/la-completezza-che-crea-valore.jpg"
   }
 ]
