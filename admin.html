@@ -68,6 +68,7 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <small>Scegli la pagina e <b>trascina un riquadro</b> sull’area dove deve comparire il QR (si adatta a un quadrato). Il colore dello sfondo del riquadro e del QR si ricavano dal punto scelto: puoi correggerli.</small>
  <div class="g2"><div><label>Pagina del PDF</label><input id="qp" type="number" min="1" value="1"></div><div><label>&nbsp;</label><small id="psz"></small></div></div>
  <div class="g2"><div><label>Cosa disegni con il mouse</label><select id="dm"><option value="qr">Il QR</option><option value="cv">Un’area da coprire (nasconde una scritta originale)</option></select></div><div id="cvl"></div></div>
+ <button class="s" id="snap">Aggancia al QR esistente</button> <small>Disegna un riquadro approssimativo attorno al vecchio QR (con il suo fondo chiaro, se c\u2019è) e premi: il riquadro si adatta e si centra da solo. Con le frecce nei campi sotto correggi di mezzo punto.</small>
  <div id="pw"><canvas id="pc"></canvas><div id="pr"></div></div>
  <div class="g4"><div><label>X (pt)</label><input id="bx" type="number" step="0.1"></div><div><label>Y dall’alto (pt)</label><input id="by" type="number" step="0.1"></div><div><label>Lato (pt)</label><input id="bs" type="number" step="0.1"></div>
  <div><label>Colori sfondo / QR</label><input id="cb" type="color" style="width:48%"> <input id="cd" type="color" style="width:48%"></div></div>
@@ -75,6 +76,7 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <h2 style="margin-top:18px">Scritte sotto il QR</h2>
  <label>Testo (lascia vuoto per nessuna scritta)</label><input id="l1" type="text">
  <div class="g4"><div><label style="font-weight:400"><input id="la" type="checkbox"> Indirizzo del sito</label></div><div><label>Colore</label><input id="lc" type="color"></div><div><label>Dimensione</label><input id="ls" type="number" step="0.1" min="3" max="14"></div></div>
+ <div class="g4"><div><label>Distanza dal QR (pt)</label><input id="lg" type="number" step="0.5"></div><div><label>Spazio tra righe (pt)</label><input id="lh" type="number" step="0.5"></div><div><label>Sposta a destra (pt)</label><input id="lx" type="number" step="0.5"></div><div></div></div>
  <button class="s" id="prevb">Anteprima con QR di prova</button> <button id="savem">Salva su GitHub</button> <button class="s" id="canc">Chiudi</button>
  <div id="prv" style="margin-top:12px"></div>
 </div>
@@ -170,7 +172,7 @@ function openEd(m,idx){
   $('ed').style.display='block'; $('edt').textContent=m?('Modifica: '+m.title):'Nuovo materiale';
   $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; for(let i=0;i<3;i++){ const x=E.m.msgs[i]||{l:'',t:''}; $('ml'+i).value=x.l||''; $('mm'+i).value=x.t||''; } $('dm').value='qr';
   $('mf').value=''; $('cv').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
-  $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8;
+  $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8; $('lg').value=q.label.gap!=null?q.label.gap:13; $('lh').value=q.label.lead||10.5; $('lx').value=q.label.dx||0;
   $('prv').innerHTML=''; mpv(); $('ed').scrollIntoView({behavior:'smooth'});
   renderCovers(); if(m) loadPage(null);
 }
@@ -189,7 +191,7 @@ async function loadPage(bytes){
 async function drawPage(){
   if(!pg.pdfDoc) return; const n=Math.min(Math.max(+$('qp').value||1,1),pg.pdfDoc.numPages); $('qp').value=n;
   const p=await pg.pdfDoc.getPage(n), v1=p.getViewport({scale:1}); pg.w=v1.width; pg.h=v1.height; pg.scale=900/pg.w;
-  const v=p.getViewport({scale:pg.scale}), c=$('pc'); c.width=v.width; c.height=v.height; c.style.width=Math.min(420,v.width)+'px';
+  const v=p.getViewport({scale:pg.scale}), c=$('pc'); c.width=v.width; c.height=v.height; c.style.width=Math.min(640,v.width)+'px';
   await p.render({canvasContext:c.getContext('2d'),viewport:v}).promise; $('psz').textContent=`Pagina ${n}/${pg.pdfDoc.numPages} · ${pg.w.toFixed(0)}×${pg.h.toFixed(0)} pt`;
   fromFields(); renderCovers(); }
 $('qp').onchange=drawPage;
@@ -220,9 +222,17 @@ function renderCovers(){ if(!E) return; const w=$('pw'); w.querySelectorAll('.cv
 function autoColors(){ const q=E.m.qr, c=$('pc'), ctx=c.getContext('2d'), k=pg.scale; const o=1.5,pts=[[q.boxX+o,q.boxTop+o],[q.boxX+q.boxSize-o,q.boxTop+o],[q.boxX+o,q.boxTop+q.boxSize-o],[q.boxX+q.boxSize-o,q.boxTop+q.boxSize-o]].map(([x,y])=>[Math.min(Math.max(x,0),pg.w-1),Math.min(Math.max(y,0),pg.h-1)]);
   let R=0,G=0,B=0; pts.forEach(([x,y])=>{ const d=ctx.getImageData(Math.round(x*k),Math.round(y*k),1,1).data; R+=d[0];G+=d[1];B+=d[2]; }); R=Math.round(R/4);G=Math.round(G/4);B=Math.round(B/4);
   const h=n=>n.toString(16).padStart(2,'0'); q.boxColor='#'+h(R)+h(G)+h(B); const lum=(0.2126*R+0.7152*G+0.0722*B)/255; q.dark=lum>0.5?'#1E1E1C':'#FFFFFF'; $('cb').value=q.boxColor; $('cd').value=q.dark; }
+$('snap').onclick=()=>{ if(!pg.pdfDoc||!E) return; const q=E.m.qr, ctx=$('pc').getContext('2d'), k=pg.scale, m=10;
+  const x0=Math.max(0,Math.floor((q.boxX-m)*k)), y0=Math.max(0,Math.floor((q.boxTop-m)*k)), x1=Math.min($('pc').width,Math.ceil((q.boxX+q.boxSize+m)*k)), y1=Math.min($('pc').height,Math.ceil((q.boxTop+q.boxSize+m)*k));
+  const w=x1-x0,h=y1-y0; if(w<5||h<5) return; const d=ctx.getImageData(x0,y0,w,h).data; const px=(x,y)=>{const i=(y*w+x)*4; return [d[i],d[i+1],d[i+2]];};
+  const cn=[px(0,0),px(w-1,0),px(0,h-1),px(w-1,h-1)]; const bg=[0,1,2].map(j=>cn.reduce((s,c)=>s+c[j],0)/4);
+  let minx=w,miny=h,maxx=-1,maxy=-1; for(let y=0;y<h;y++)for(let x=0;x<w;x++){ const c=px(x,y); if(Math.abs(c[0]-bg[0])+Math.abs(c[1]-bg[1])+Math.abs(c[2]-bg[2])>150){ if(x<minx)minx=x; if(x>maxx)maxx=x; if(y<miny)miny=y; if(y>maxy)maxy=y; } }
+  if(maxx<0){ L2('Non trovo un QR dentro il riquadro: ingrandiscilo un po\u2019 attorno al vecchio QR.'); return; }
+  const side=Math.max(maxx-minx+1,maxy-miny+1)/k, cx=(x0+(minx+maxx+1)/2)/k, cy=(y0+(miny+maxy+1)/2)/k, box=side;
+  setBox(cx-box/2,cy-box/2,box); autoColors(); L2('Riquadro agganciato al QR esistente: controlla con l\u2019anteprima.'); };
 $('cb').oninput=()=>E.m.qr.boxColor=$('cb').value; $('cd').oninput=()=>E.m.qr.dark=$('cd').value;
 function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msgs=[0,1,2].map(i=>({l:$('ml'+i).value.trim(),t:$('mm'+i).value.trim()})).filter(x=>x.t).map((x,i)=>({l:x.l||('Messaggio '+(i+1)),t:x.t})); if(!m.msgs.length) throw new Error('Scrivi almeno un messaggio WhatsApp.'); m.msg=m.msgs[0].t;
-  q.page=(+$('qp').value||1)-1; q.label={l1:$('l1').value.trim(),addr:$('la').checked,color:$('lc').value,size:+$('ls').value||5.8}; q.boxColor=$('cb').value; q.dark=$('cd').value;
+  q.page=(+$('qp').value||1)-1; q.label={l1:$('l1').value.trim(),addr:$('la').checked,color:$('lc').value,size:+$('ls').value||5.8,gap:+$('lg').value,lead:+$('lh').value||10.5,dx:+$('lx').value||0}; q.boxColor=$('cb').value; q.dark=$('cd').value;
   if(!m.title) throw new Error('Inserisci il titolo.'); if(!m.page) throw new Error('Inserisci il nome pagina.'); if(!(q.boxSize>0)||(q.boxX+q.boxTop)<=0) throw new Error('Disegna il riquadro del QR sul PDF.'); return m; }
 $('prevb').onclick=async()=>{ try{ const m=collect(); const mm=JSON.parse(JSON.stringify(m));
   let url; if(E.newPdf){ url=URL.createObjectURL(new Blob([E.newPdf],{type:'application/pdf'})); } else { if(!m.pdf) throw new Error('Carica il PDF.'); url=m.pdf; } mm.pdf=url;

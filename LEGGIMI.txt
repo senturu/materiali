@@ -33,3 +33,7 @@ Per modificare un materiale esistente (testi, posizione QR, messaggio) usa "Modi
 NOVITA: 3 messaggi e aree da coprire
 - Nell'editor materiale puoi scrivere fino a 3 messaggi WhatsApp con etichetta: il CF sceglie con i pulsanti sopra il testo. Se ne compili uno solo, i pulsanti non compaiono.
 - "Cosa disegni con il mouse" > "Un'area da coprire": disegna un rettangolo sopra una scritta originale (es. "Scopri di più"). Il colore di sfondo e' ricavato in automatico (correggibile). Il testo resta nel PDF sotto il riquadro, quindi funziona su sfondi a tinta unita.
+
+POSIZIONE PRECISA DEL QR E DELLE SCRITTE
+- "Aggancia al QR esistente": disegna un riquadro approssimativo attorno al vecchio QR e premi il pulsante; il riquadro si adatta e si centra da solo (precisione circa mezzo punto). Poi correggi con i campi X / Y / Lato (frecce = 0,1 pt).
+- Scritte: "Distanza dal QR", "Spazio tra righe" e "Sposta a destra" regolano la posizione del testo (in punti, 1 pt = 0,35 mm).

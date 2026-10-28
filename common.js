@@ -34,24 +34,24 @@ async function makePdf(m, url, site){
   const n = qr.getModuleCount(), s = Q.modSize/n;
   for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(qr.isDark(r,c))
     page.drawRectangle({ x:Q.modX+c*s-0.02, y:H-Q.modTop-(r+1)*s-0.02, width:s+0.04, height:s+0.04, color:rgb(...hex(Q.dark)) });
-  const cxm = Q.boxX+Q.boxSize/2, yb = H-Q.boxTop-Q.boxSize;
+  const cxm = Q.boxX+Q.boxSize/2+((L&&+L.dx)||0), yb = H-Q.boxTop-Q.boxSize;
   let tw=0, ty=yb;
   if(L && (L.l1 || L.addr)){
     doc.registerFontkit(fontkit);
     const ld = async f=>doc.embedFont(await (await getFile('fonts/'+f)).arrayBuffer());
     const font = await ld('Widiba-Medium.ttf'), font2 = await ld('Widiba-Regular.ttf');
     const col=rgb(...hex(L.color||'#FFFFFF')), sz=+L.size||5.8, cs=sz*0.17;
-    let y=yb-9;
+    let y=yb-(L.gap!=null&&L.gap!==''?+L.gap:13);
     if(L.l1){
       tw = font.widthOfTextAtSize(L.l1,sz)+cs*(L.l1.length-1);
       let cx=cxm-tw/2;
       for(const ch of L.l1){ page.drawText(ch,{x:cx,y,size:sz,font,color:col}); cx+=font.widthOfTextAtSize(ch,sz)+cs; }
-      y-=10.5;
+      y-=(+L.lead||10.5);
     }
     if(L.addr){
       const addr = site.replace(/^https?:\/\//,'').replace(/\/+$/,''), sz2=sz*1.2, w2=font2.widthOfTextAtSize(addr,sz2);
       page.drawText(addr,{x:cxm-w2/2,y,size:sz2,font:font2,color:col}); tw=Math.max(tw,w2); ty=y-3;
-    } else ty=y+10.5-3;
+    } else ty=y+(+L.lead||10.5)-3;
   }
   const ctx=doc.context;
   const link=ctx.obj({Type:'Annot',Subtype:'Link',Rect:[Math.min(Q.boxX-4,cxm-tw/2-4),ty,Math.max(Q.boxX+Q.boxSize+4,cxm+tw/2+4),H-Q.boxTop],Border:[0,0,0],
