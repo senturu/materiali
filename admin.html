@@ -85,14 +85,19 @@ const cfgGh=()=>{ const v={o:$('o').value.trim(),r:$('r').value.trim(),b:$('b').
   return v; };
 const b64=t=>btoa(unescape(encodeURIComponent(t)));
 const unb64=t=>decodeURIComponent(escape(atob(t.replace(/\n/g,''))));
-async function ghGet(path){ const c=cfgGh();
-  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}?ref=${encodeURIComponent(c.b)}`,{headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json'}});
+async function ghMeta(path){ const c=cfgGh();
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}?ref=${encodeURIComponent(c.b)}&_=${Date.now()}`,{cache:'no-store',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json'}});
   if(r.status===404) return null; if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
-  const j=await r.json(); return {sha:j.sha,text:unb64(j.content)}; }
-async function ghPut(path,text,msg){ const c=cfgGh(); const cur=await ghGet(path);
-  const body={message:msg,content:b64(text),branch:c.b}; if(cur) body.sha=cur.sha;
-  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`,{method:'PUT',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,200)); return true; }
+  return r.json(); }
+async function ghGet(path){ const j=await ghMeta(path); return j?{sha:j.sha,text:unb64(j.content)}:null; }
+async function ghPutRaw(path,b64c,msg){ const c=cfgGh(); let last='';
+  for(let i=0;i<4;i++){
+    const cur=await ghMeta(path); const body={message:msg,content:b64c,branch:c.b}; if(cur) body.sha=cur.sha;
+    const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`,{method:'PUT',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok) return true; last='GitHub '+r.status+': '+(await r.text()).slice(0,200);
+    if(r.status!==409&&r.status!==422) break; await new Promise(x=>setTimeout(x,1200*(i+1))); }
+  throw new Error(last); }
+async function ghPut(path,text,msg){ return ghPutRaw(path,b64(text),msg); }
 function dl(name,text){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'})); a.download=name; a.click(); }
 
 $('test').onclick=async()=>{ const L=$('log0'); L.style.display='block'; try{ const c=cfgGh();
@@ -139,10 +144,6 @@ let MATS=null, E=null;
 const L2=t=>{ $('log2').style.display='block'; $('log2').textContent=t; };
 const slug=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'materiale';
 function bytesB64(u8){ let s=''; for(let i=0;i<u8.length;i+=0x8000) s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(s); }
-async function ghPutRaw(path,b64c,msg){ const c=cfgGh(); const cur=await ghGet(path).catch(()=>null);
-  const body={message:msg,content:b64c,branch:c.b}; if(cur) body.sha=cur.sha;
-  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`,{method:'PUT',headers:{Authorization:'Bearer '+c.t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!r.ok) throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,200)); }
 function renderList(){
   $('list').innerHTML=MATS.map((m,i)=>`<div class="it"><b>${m.title}</b><small>${m.cat||''}</small><button class="s" data-a="up" data-i="${i}">↑</button><button class="s" data-a="dn" data-i="${i}">↓</button><button class="s" data-a="ed" data-i="${i}">Modifica</button><button class="s" data-a="del" data-i="${i}">Elimina</button></div>`).join('')||'<small>Nessun materiale.</small>';
   $('new').style.display='inline-block';
