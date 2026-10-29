@@ -111,15 +111,15 @@
         "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nUn promemoria: fino al *18 novembre 2026* si può aprire il Conto Widiba Classic con canone azzerato per il primo anno e 3,5% annuo lordo sui vincoli a 6 mesi di almeno 5.000 € (da attivare entro 30 giorni dall’apertura).\n\nSe conosci qualcuno a cui può interessare, puoi girargli questo link: {link}\n\nSono a disposizione per aiutarlo a partire."
       }
     ],
-    "page": "scopri-conto-widiba-classic-semplice-evoluto-completo-6c5UK",
+    "page": "blog/scopri-conto-widiba-classic-semplice-evoluto-completo-6c5UK",
     "qr": {
       "page": 1,
-      "boxX": 176.053,
-      "boxTop": 450.694,
-      "boxSize": 57.86,
-      "modX": 179.339,
-      "modTop": 453.98,
-      "modSize": 51.287,
+      "boxX": 178.874,
+      "boxTop": 430.826,
+      "boxSize": 61.346,
+      "modX": 182.358,
+      "modTop": 434.31,
+      "modSize": 54.377,
       "boxColor": "#31373e",
       "dark": "#ffffff",
       "label": {
