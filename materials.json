@@ -90,5 +90,51 @@
         "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi è mai capitato di pensare che cambiare banca sia complicato? \n\nCon Banca Widiba è più semplice di quanto sembri: con il servizio gratuito *WidiExpress* compili un modulo online e noi ci occupiamo del trasferimento di bonifici, accrediti, addebiti automatici, stipendio o pensione.\n\nE hai un Consulente Finanziario dedicato che ti segue nella gestione della liquidità e nelle scelte di investimento: *una sola banca per la liquidità di oggi e i progetti di domani*.\n\nTutti i dettagli qui: {link}\n\nSe vuoi, ti accompagno io passo dopo passo.\n\n_Messaggio pubblicitario con finalità promozionale. Condizioni nei fogli informativi su widiba.it._"
       }
     ]
+  },
+  {
+    "id": "promo-acquisizione",
+    "title": "Promo acquisizione",
+    "desc": "Iniziativa dedicata all'acquisizione di nuovi clienti!",
+    "cat": "Commerciale",
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nSe conosci qualcuno che vuole mettere a frutto la propria liquidità, c’è una promozione dedicata ai nuovi clienti: *3,5% annuo lordo* sui vincoli a 6 mesi di almeno 5.000 €, aprendo il Conto Widiba Classic entro il 18 novembre 2026.\n\nI dettagli qui: {link}\n\nSe ti va, ne parliamo insieme.",
+    "msgs": [
+      {
+        "l": "Standard",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nSe conosci qualcuno che vuole mettere a frutto la propria liquidità, c’è una promozione dedicata ai nuovi clienti: *3,5% annuo lordo* sui vincoli a 6 mesi di almeno 5.000 €, aprendo il Conto Widiba Classic entro il 18 novembre 2026.\n\nI dettagli qui: {link}\n\nSe ti va, ne parliamo insieme."
+      },
+      {
+        "l": "Conto completo",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi presento il Conto Widiba Classic: *canone azzerato per il primo anno* per i nuovi clienti, carta di debito internazionale inclusa, bonifici online gratuiti, PEC e firma digitale incluse, e un’app intuitiva per fare tutto, dappertutto.\n\nAprendolo entro il 18 novembre 2026 puoi avere anche il *3,5% annuo* lordo sui vincoli a 6 mesi (almeno 5.000 €).\n\nScopri tutto qui: {link}"
+      },
+      {
+        "l": "Senso di urgenza",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nUn promemoria: fino al *18 novembre 2026* si può aprire il Conto Widiba Classic con canone azzerato per il primo anno e 3,5% annuo lordo sui vincoli a 6 mesi di almeno 5.000 € (da attivare entro 30 giorni dall’apertura).\n\nSe conosci qualcuno a cui può interessare, puoi girargli questo link: {link}\n\nSono a disposizione per aiutarlo a partire."
+      }
+    ],
+    "page": "scopri-conto-widiba-classic-semplice-evoluto-completo-6c5UK",
+    "qr": {
+      "page": 1,
+      "boxX": 176.053,
+      "boxTop": 450.694,
+      "boxSize": 57.86,
+      "modX": 179.339,
+      "modTop": 453.98,
+      "modSize": 51.287,
+      "boxColor": "#31373e",
+      "dark": "#ffffff",
+      "label": {
+        "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
+        "addr": true,
+        "color": "#ffffff",
+        "size": 5.8,
+        "gap": 13,
+        "lead": 10.5,
+        "dx": 0
+      },
+      "covers": []
+    },
+    "file": "Promo_acquisizione",
+    "pdf": "materials/promo-acquisizione.pdf",
+    "thumb": "materials/promo-acquisizione.jpg"
   }
 ]
