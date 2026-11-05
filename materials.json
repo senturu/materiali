@@ -136,5 +136,51 @@
     "file": "Promo_acquisizione",
     "pdf": "materials/promo-acquisizione.pdf",
     "thumb": "materials/promo-acquisizione.jpg"
+  },
+  {
+    "id": "brochure-widiba",
+    "title": "Brochure Widiba",
+    "desc": "Brochure istituzionale, versione stampabile",
+    "cat": "Istituzionale",
+    "msg": "VERSIONE ADATTA ALLA STAMPA, DA NON INVIARE DIGITALMENTE",
+    "msgs": [
+      {
+        "l": "Messaggio",
+        "t": "VERSIONE ADATTA ALLA STAMPA, DA NON INVIARE DIGITALMENTE"
+      },
+      {
+        "l": "Messaggio 2",
+        "t": "VERSIONE ADATTA ALLA STAMPA, DA NON INVIARE DIGITALMENTE"
+      },
+      {
+        "l": "Messaggio 3",
+        "t": "VERSIONE ADATTA ALLA STAMPA, DA NON INVIARE DIGITALMENTE"
+      }
+    ],
+    "page": "index.html",
+    "qr": {
+      "page": 19,
+      "boxX": 256.319,
+      "boxTop": 373.34,
+      "boxSize": 126.597,
+      "modX": 263.51,
+      "modTop": 380.531,
+      "modSize": 112.216,
+      "boxColor": "#ffffff",
+      "dark": "#1e1e1c",
+      "label": {
+        "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
+        "addr": true,
+        "color": "#ffffff",
+        "size": 10,
+        "gap": 22,
+        "lead": 16,
+        "dx": 0
+      },
+      "covers": []
+    },
+    "file": "Brochure_Widiba",
+    "pdf": "materials/brochure-widiba.pdf",
+    "thumb": "materials/brochure-widiba.jpg"
   }
 ]
