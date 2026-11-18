@@ -182,5 +182,49 @@
     "file": "Brochure_Widiba",
     "pdf": "materials/brochure-widiba.pdf",
     "thumb": "materials/brochure-widiba.jpg"
+  },
+  {
+    "id": "promo-acquisizione-19-novembre",
+    "title": "Promo acquisizione 19 novembre",
+    "desc": "Il Flyer della promo acquisizione",
+    "cat": "Commerciale",
+    "kind": "digital",
+    "pub": {
+      "state": "draft",
+      "from": "2026-11-18T23:10:00.000Z",
+      "until": "2026-12-14T22:59:00.000Z"
+    },
+    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}",
+    "msgs": [
+      {
+        "l": "Messaggio",
+        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}"
+      }
+    ],
+    "page": "blog/scopri-conto-widiba-classic-semplice-evoluto-completo-6c5UK",
+    "qr": {
+      "page": 1,
+      "boxX": 183.42,
+      "boxTop": 447.792,
+      "boxSize": 52.688,
+      "modX": 186.413,
+      "modTop": 450.785,
+      "modSize": 46.703,
+      "boxColor": "#514a4c",
+      "dark": "#ffffff",
+      "label": {
+        "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
+        "addr": true,
+        "color": "#ffffff",
+        "size": 5.8,
+        "gap": 13,
+        "lead": 10.5,
+        "dx": 0
+      },
+      "covers": []
+    },
+    "file": "Promo_acquisizione_19_novembre",
+    "pdf": "materials/promo-acquisizione-19-novembre.pdf",
+    "thumb": "materials/promo-acquisizione-19-novembre.jpg"
   }
 ]
