@@ -9,13 +9,13 @@
     "file": "Investi_con_Widiba_flyer",
     "page": "blog/investi-nuova-liquidita-e-ti-rimborsiamo-il-bollo-per-tutto-il-2027-1HCAA",
     "qr": {
-      "boxX": 178.874,
-      "boxTop": 430.826,
-      "boxSize": 61.346,
-      "modX": 182.358,
-      "modTop": 434.31,
-      "modSize": 54.377,
-      "boxColor": "#ffffff",
+      "boxX": 178.967,
+      "boxTop": 431.145,
+      "boxSize": 61.594,
+      "modX": 182.466,
+      "modTop": 434.644,
+      "modSize": 54.597,
+      "boxColor": "#f1efe9",
       "dark": "#1e1e1c",
       "label": {
         "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
@@ -43,7 +43,13 @@
         "l": "Empatico",
         "t": "Ciao, ti scrivo perché c'è una novità che può interessarti: con “*Investi con Widiba*” il bollo sui tuoi investimenti di tutto il 2027 ti viene rimborsato!\n\nTi ho preparato un riepilogo chiaro con le condizioni: {link}\n\nSe vuoi lo vediamo insieme con calma. \nA presto, _{nome}_, {ruolo} di Banca Widiba"
       }
-    ]
+    ],
+    "kind": "digital",
+    "pub": {
+      "state": "live",
+      "from": null,
+      "until": null
+    }
   },
   {
     "id": "la-completezza-che-crea-valore",
