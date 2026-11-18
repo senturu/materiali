@@ -172,13 +172,13 @@
     "page": "index.html",
     "qr": {
       "page": 19,
-      "boxX": 256.319,
-      "boxTop": 373.34,
-      "boxSize": 126.597,
-      "modX": 263.51,
-      "modTop": 380.531,
-      "modSize": 112.216,
-      "boxColor": "#ffffff",
+      "boxX": 257.129,
+      "boxTop": 371.922,
+      "boxSize": 123.018,
+      "modX": 264.116,
+      "modTop": 378.909,
+      "modSize": 109.043,
+      "boxColor": "#b0a59d",
       "dark": "#1e1e1c",
       "label": {
         "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
@@ -193,7 +193,13 @@
     },
     "file": "Brochure_Widiba",
     "pdf": "materials/brochure-widiba.pdf",
-    "thumb": "materials/brochure-widiba.jpg"
+    "thumb": "materials/brochure-widiba.jpg",
+    "kind": "print",
+    "pub": {
+      "state": "live",
+      "from": null,
+      "until": null
+    }
   },
   {
     "id": "promo-acquisizione-19-novembre",
