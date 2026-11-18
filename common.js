@@ -21,6 +21,21 @@ function parseEmail(v, domains){
 }
 
 const matMsgs=m=>(m.msgs&&m.msgs.length?m.msgs:[{l:'Messaggio',t:m.msg||'{link}'}]);
+
+// Pubblicazione. m.pub = {state:'draft'|'live'|'off', from:ISO|null, until:ISO|null}
+//  draft = bozza (nascosto) · live = pubblicato (rispetta from/until) · off = ritirato (nascosto)
+// Senza m.pub il materiale è considerato pubblicato (compatibile con i materiali esistenti).
+// Ritorna lo stato EFFETTIVO a un dato istante t (ms): draft | off | sched | live | exp
+function pubState(m,t){
+  const p=m.pub; if(!p) return 'live';
+  if(p.state==='draft'||p.state==='off') return p.state;
+  const f=p.from?Date.parse(p.from):NaN, u=p.until?Date.parse(p.until):NaN;
+  if(!isNaN(f)&&t<f) return 'sched';
+  if(!isNaN(u)&&t>=u) return 'exp';
+  return 'live';
+}
+const PUB_LABEL={draft:'Bozza',live:'Online',sched:'Programmato',exp:'Scaduto',off:'Ritirato'};
+const isPrint=m=>m.kind==='print';
 const DEF_LABEL={l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8};
 async function makePdf(m, url, site){
   const Q=m.qr, bytes = await (await getFile(m.pdf)).arrayBuffer();

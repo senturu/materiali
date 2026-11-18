@@ -12,7 +12,18 @@ textarea{min-height:90px}
 .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 button{background:#2C2E37;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;margin:12px 8px 0 0}
 button.s{background:#fff;color:#2C2E37;border:1.5px solid #2C2E37}
-#pw{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;border:1px solid #CBC2C0;margin-top:8px}#pc{display:block;max-width:100%;height:auto}#pw .cvr{position:absolute;border:2px dashed #2C2E37;background:rgba(44,46,55,.12);pointer-events:none}#pr{position:absolute;border:2px solid #D03F65;background:rgba(208,63,101,.15);pointer-events:none}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#prv img{max-width:340px;border:1px solid #ccc;margin:6px 6px 0 0}.it{display:flex;align-items:center;gap:6px;border-top:1px solid #DDD6CA;padding:8px 0}.it b{flex:1}.it button{margin:0;padding:6px 10px;font-size:13px}
+#pw{position:relative;display:inline-block;max-width:100%;touch-action:none;cursor:crosshair;border:1px solid #CBC2C0;margin-top:8px}#pc{display:block;max-width:100%;height:auto}#pw .cvr{position:absolute;border:2px dashed #2C2E37;background:rgba(44,46,55,.12);pointer-events:none}#pr{position:absolute;border:2px solid #D03F65;background:rgba(208,63,101,.15);pointer-events:none}.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#prv img{max-width:340px;border:1px solid #ccc;margin:6px 6px 0 0}.it{display:flex;align-items:center;flex-wrap:wrap;gap:6px;border-top:1px solid #DDD6CA;padding:8px 0}.it b{flex:1}.it button{margin:0;padding:6px 10px;font-size:13px}
+.it .tt{flex:1;min-width:200px}
+.bd{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;color:#fff;background:#2C2E37;margin-right:4px}
+.bd.k-p{background:#D03F65}.bd.s-live{background:#2e7d5b}.bd.s-sched{background:#b7791f}.bd.s-draft,.bd.s-off{background:#8a8486}.bd.s-exp{background:#a33a3a}
+select{width:100%;padding:9px 10px;border:1px solid #CBC2C0;border-radius:8px;font:inherit;background:#fff}
+input[type=datetime-local]{width:100%;padding:9px 10px;border:1px solid #CBC2C0;border-radius:8px;font:inherit;background:#fff}
+#gv,#gh{position:absolute;pointer-events:none;border:0;display:none}
+#gv{left:50%;top:0;bottom:0;border-left:1px dashed rgba(208,63,101,.85)}
+#gh{top:50%;left:0;right:0;border-top:1px dashed rgba(208,63,101,.85)}
+#gv.ok{border-left:2px solid #2e7d5b}#gh.ok{border-top:2px solid #2e7d5b}
+.cinfo{display:block;margin-top:6px}.cinfo .ok{color:#2e7d5b;font-weight:600}
+.psum{display:block;margin-top:8px;padding:8px 10px;background:#fff;border-left:4px solid #2C2E37;border-radius:6px}
 pre{background:#fff;border:1px solid #CBC2C0;border-radius:8px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto;margin:10px 0 0}
 small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
 .mat{border-top:1px solid #DDD6CA;margin-top:14px;padding-top:6px}
@@ -55,7 +66,19 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <div class="g2"><div><label>Categoria</label><input id="mc" type="text" placeholder="es. Commerciale"></div>
  <div><label>Nome pagina sul sito del CF</label><input id="mp" type="text" placeholder="es. investi2026"></div></div>
  <label>Descrizione (nell’elenco materiali)</label><textarea id="md"></textarea>
- <label>Messaggi WhatsApp (da 1 a 3: il CF sceglie quale usare; lascia vuoti quelli che non servono)</label>
+
+ <h2 style="margin-top:18px">Tipo di materiale</h2>
+ <select id="mk"><option value="digital">Digitale – il CF può inviarlo con il messaggio WhatsApp, copiare il link, salvare le immagini</option><option value="print">Stampa – il CF vede solo “Scarica il PDF” e “Condividi PDF” (niente messaggi né testi)</option></select>
+ <small>Nella parte pubblica compare un badge <b>Digitale</b> o <b>Stampa</b> sul materiale. Per i materiali di stampa i messaggi WhatsApp qui sotto non servono.</small>
+
+ <h2 style="margin-top:18px">Pubblicazione</h2>
+ <div class="g2"><div><label>Stato</label><select id="ps"><option value="draft">Bozza – caricato ma nascosto ai CF</option><option value="live">Pubblicato</option><option value="off">Ritirato – nascosto ai CF (si può ripubblicare)</option></select></div><div></div></div>
+ <div class="g2"><div><label>Visibile dal (vuoto = subito)</label><input id="pf" type="datetime-local"></div><div><label>Visibile fino al (vuoto = senza scadenza)</label><input id="pu" type="datetime-local"></div></div>
+ <small>Orari nel fuso del tuo computer. Le date valgono solo con stato “Pubblicato”. La scadenza si può aggiungere o cambiare anche dopo: alla scadenza il materiale sparisce dai CF ma non viene cancellato. </small>
+ <button class="s" id="pclr" type="button">Azzera date</button>
+ <span class="psum" id="psum"></span>
+
+ <label style="margin-top:18px">Messaggi WhatsApp (da 1 a 3: il CF sceglie quale usare; lascia vuoti quelli che non servono)</label>
  <div class="g2" style="grid-template-columns:1fr 3fr"><input class="ml" id="ml0" placeholder="Etichetta 1"><textarea id="mm0" style="min-height:100px"></textarea>
  <input class="ml" id="ml1" placeholder="Etichetta 2"><textarea id="mm1" style="min-height:100px"></textarea>
  <input class="ml" id="ml2" placeholder="Etichetta 3"><textarea id="mm2" style="min-height:100px"></textarea></div>
@@ -69,9 +92,14 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <div class="g2"><div><label>Pagina del PDF</label><input id="qp" type="number" min="1" value="1"></div><div><label>&nbsp;</label><small id="psz"></small></div></div>
  <div class="g2"><div><label>Cosa disegni con il mouse</label><select id="dm"><option value="qr">Il QR</option><option value="cv">Un’area da coprire (nasconde una scritta originale)</option></select></div><div id="cvl"></div></div>
  <button class="s" id="snap">Aggancia al QR esistente</button> <small>Disegna un riquadro approssimativo attorno al vecchio QR (con il suo fondo chiaro, se c\u2019è) e premi: il riquadro si adatta e si centra da solo. Con le frecce nei campi sotto correggi di mezzo punto.</small>
- <div id="pw"><canvas id="pc"></canvas><div id="pr"></div></div>
+ <div id="pw"><canvas id="pc"></canvas><div id="pr"></div><div id="gv"></div><div id="gh"></div></div>
  <div class="g4"><div><label>X (pt)</label><input id="bx" type="number" step="0.1"></div><div><label>Y dall’alto (pt)</label><input id="by" type="number" step="0.1"></div><div><label>Lato (pt)</label><input id="bs" type="number" step="0.1"></div>
  <div><label>Colori sfondo / QR</label><input id="cb" type="color" style="width:48%"> <input id="cd" type="color" style="width:48%"></div></div>
+ <div style="margin-top:6px">
+  <button class="s" id="cH" type="button">↔ Centra in orizzontale</button><button class="s" id="cV" type="button">↕ Centra in verticale</button><button class="s" id="cB" type="button">✛ Centra sulla pagina</button>
+  <label style="font-weight:400;display:inline-block;margin-left:6px"><input id="cg" type="checkbox" checked> guide di centro e aggancio automatico</label>
+ </div>
+ <small class="cinfo" id="cinfo"></small>
 
  <h2 style="margin-top:18px">Scritte sotto il QR</h2>
  <label>Testo (lascia vuoto per nessuna scritta)</label><input id="l1" type="text">
@@ -81,7 +109,7 @@ small{color:#6a6264}code{background:#eee;padding:1px 4px;border-radius:4px}
  <div id="prv" style="margin-top:12px"></div>
 </div>
 
-<script src="lib/xlsx.full.min.js"></script><script src="lib/pdf-lib.min.js"></script><script src="lib/fontkit.umd.min.js"></script><script src="lib/qrcode.js"></script><script src="lib/pdf.min.js"></script><script src="common.js"></script>
+<script src="lib/xlsx.full.min.js"></script><script src="lib/pdf-lib.min.js"></script><script src="lib/fontkit.umd.min.js"></script><script src="lib/qrcode.js"></script><script src="lib/pdf.min.js"></script><script src="common.js?v=2"></script>
 <script>
 const $=id=>document.getElementById(id);
 try{ const s=JSON.parse(localStorage.getItem('cfhub_gh')||'{}'); for(const k of ['o','r','b','t']) if(s[k]) $(k).value=s[k]; if(s.t) $('rem').checked=true; }catch(e){}
@@ -150,15 +178,40 @@ let MATS=null, E=null;
 const L2=t=>{ $('log2').style.display='block'; $('log2').textContent=t; };
 const slug=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'materiale';
 function bytesB64(u8){ let s=''; for(let i=0;i<u8.length;i+=0x8000) s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(s); }
+/* pubblicazione: date in formato datetime-local (ora locale) <-> ISO */
+const pad2=n=>String(n).padStart(2,'0');
+const toLocalInput=iso=>{ if(!iso) return ''; const d=new Date(iso); if(isNaN(d)) return ''; return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+const fromLocalInput=v=>v?new Date(v).toISOString():null;
+const fmtDT=iso=>new Date(iso).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const getPub=m=>m.pub||{state:'live',from:null,until:null};
+function pubText(p,t){ // frase leggibile dello stato effettivo
+  const s=pubState({pub:p},t), f=p.from?fmtDT(p.from):null, u=p.until?fmtDT(p.until):null;
+  if(s==='draft') return 'Bozza: nascosto ai CF finché non lo pubblichi.';
+  if(s==='off') return 'Ritirato: nascosto ai CF. Puoi ripubblicarlo quando vuoi.';
+  if(s==='sched') return `Programmato: sarà visibile dal ${f}`+(u?` fino al ${u}.`:', senza scadenza.');
+  if(s==='exp') return `Scaduto il ${u}: non è più visibile ai CF, ma resta in archivio. Per ripubblicarlo cambia o togli la scadenza.`;
+  return 'Online ora'+(u?`, fino al ${u}.`:', senza scadenza.');
+}
 function renderList(){
-  $('list').innerHTML=MATS.map((m,i)=>`<div class="it"><b>${m.title}</b><small>${m.cat||''}</small><button class="s" data-a="up" data-i="${i}">↑</button><button class="s" data-a="dn" data-i="${i}">↓</button><button class="s" data-a="ed" data-i="${i}">Modifica</button><button class="s" data-a="del" data-i="${i}">Elimina</button></div>`).join('')||'<small>Nessun materiale.</small>';
+  const now=Date.now();
+  $('list').innerHTML=MATS.map((m,i)=>{ const p=getPub(m), s=pubState(m,now), vis=(s==='live'||s==='sched');
+    const win=(p.from||p.until)&&(s==='live'||s==='sched'||s==='exp')?`<small> ${p.from?'dal '+fmtDT(p.from):''} ${p.until?'fino al '+fmtDT(p.until):''}</small>`:'';
+    return `<div class="it"><div class="tt"><b>${m.title}</b> <small>${m.cat||''}</small><br><span class="bd ${isPrint(m)?'k-p':'k-d'}">${isPrint(m)?'Stampa':'Digitale'}</span><span class="bd s-${s}">${PUB_LABEL[s]}</span>${win}</div>`+
+    `<button class="s" data-a="up" data-i="${i}">↑</button><button class="s" data-a="dn" data-i="${i}">↓</button><button class="s" data-a="ed" data-i="${i}">Modifica</button>`+
+    (vis?`<button class="s" data-a="off" data-i="${i}">Ritira</button>`:`<button data-a="pub" data-i="${i}">${s==='exp'?'Ripubblica':'Pubblica ora'}</button>`)+
+    `<button class="s" data-a="del" data-i="${i}">Elimina</button></div>`; }).join('')||'<small>Nessun materiale.</small>';
   $('new').style.display='inline-block';
   $('list').querySelectorAll('button').forEach(b=>b.onclick=async()=>{ const i=+b.dataset.i,a=b.dataset.a;
     if(a==='ed') return openEd(MATS[i],i);
     if(a==='up'&&i>0) [MATS[i-1],MATS[i]]=[MATS[i],MATS[i-1]];
     if(a==='dn'&&i<MATS.length-1) [MATS[i+1],MATS[i]]=[MATS[i],MATS[i+1]];
     if(a==='del'){ if(!confirm('Togliere «'+MATS[i].title+'» dall’elenco? (i file restano nel repository)')) return; MATS.splice(i,1); }
-    try{ await saveJson('Aggiorna elenco materiali (da admin)'); renderList(); }catch(e){ L2('Errore: '+e.message); } }); }
+    let note='';
+    if(a==='off'){ const p=getPub(MATS[i]); MATS[i].pub={state:'off',from:p.from||null,until:p.until||null}; }
+    if(a==='pub'){ const p=getPub(MATS[i]); let u=p.until||null;
+      if(u&&Date.parse(u)<=Date.now()){ u=null; note=' (la scadenza passata è stata tolta)'; }
+      MATS[i].pub={state:'live',from:null,until:u}; }
+    try{ await saveJson(a==='pub'?'Pubblica '+MATS[i].title:a==='off'?'Ritira '+MATS[i].title:'Aggiorna elenco materiali (da admin)'); renderList(); if(note) L2($('log2').textContent+note); }catch(e){ L2('Errore: '+e.message); } }); }
 async function saveJson(msg){ await ghPut('materials.json',JSON.stringify(MATS,null,2),msg); L2('✓ materials.json pubblicato. Online entro circa 1-2 minuti.'); }
 $('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); MATS=r?JSON.parse(r.text):[]; renderList(); L2('Elenco caricato da GitHub.'); }catch(e){ L2('Errore: '+e.message); } };
 
@@ -166,16 +219,26 @@ $('load').onclick=async()=>{ try{ const r=await ghGet('materials.json'); MATS=r?
 const DEFQ={page:0,boxX:0,boxTop:0,boxSize:62.358,modX:0,modTop:0,modSize:55.276,boxColor:'#F1EFE9',dark:'#1E1E1C',label:{l1:'INQUADRA IL QR CODE E VAI AL MIO SITO',addr:true,color:'#FFFFFF',size:5.8}};
 let pg={w:595,h:842,scale:1,pdfDoc:null};
 function openEd(m,idx){
-  E={idx,isNew:!m, m:m?JSON.parse(JSON.stringify(m)):{id:'',title:'',desc:'',cat:'',msg:'',msgs:[{l:'Messaggio',t:'Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}'}],page:'',qr:JSON.parse(JSON.stringify(DEFQ))},newPdf:null};
+  E={idx,isNew:!m, m:m?JSON.parse(JSON.stringify(m)):{id:'',title:'',desc:'',cat:'',kind:'digital',pub:{state:'draft',from:null,until:null},msg:'',msgs:[{l:'Messaggio',t:'Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba. {link}'}],page:'',qr:JSON.parse(JSON.stringify(DEFQ))},newPdf:null};
   if(typeof E.m.qr.label!=='object') E.m.qr.label=E.m.qr.label?DEFQ.label:{l1:'',addr:false,color:'#FFFFFF',size:5.8};
   const q=E.m.qr; q.covers=q.covers||[]; if(!E.m.msgs||!E.m.msgs.length) E.m.msgs=[{l:'Messaggio',t:E.m.msg||''}];
   $('ed').style.display='block'; $('edt').textContent=m?('Modifica: '+m.title):'Nuovo materiale';
   $('mt').value=E.m.title; $('mc').value=E.m.cat||''; $('mp').value=E.m.page||''; $('md').value=E.m.desc||''; for(let i=0;i<3;i++){ const x=E.m.msgs[i]||{l:'',t:''}; $('ml'+i).value=x.l||''; $('mm'+i).value=x.t||''; } $('dm').value='qr';
   $('mf').value=''; $('cv').value=''; $('pdfnow').textContent=m?('(attuale: '+m.pdf+')'):'(obbligatorio)'; $('qp').value=(q.page||0)+1;
   $('cb').value=q.boxColor; $('cd').value=q.dark; $('l1').value=q.label.l1||''; $('la').checked=!!q.label.addr; $('lc').value=q.label.color||'#FFFFFF'; $('ls').value=q.label.size||5.8; $('lg').value=q.label.gap!=null?q.label.gap:13; $('lh').value=q.label.lead||10.5; $('lx').value=q.label.dx||0;
+  $('mk').value=E.m.kind==='print'?'print':'digital';
+  const pb=getPub(E.m); $('ps').value=pb.state; $('pf').value=toLocalInput(pb.from); $('pu').value=toLocalInput(pb.until); psum();
+  $('bx').value=q.boxX; $('by').value=q.boxTop; $('bs').value=q.boxSize;   // evita che i valori del materiale aperto prima si propaghino a questo
   $('prv').innerHTML=''; mpv(); $('ed').scrollIntoView({behavior:'smooth'});
   renderCovers(); if(m) loadPage(null);
 }
+function pubFromForm(){ return {state:$('ps').value,from:fromLocalInput($('pf').value),until:fromLocalInput($('pu').value)}; }
+function psum(){ const p=pubFromForm(); let t=pubText(p,Date.now());
+  if(p.from&&p.until&&Date.parse(p.until)<=Date.parse(p.from)) t='⚠ La data di fine deve essere dopo quella di inizio.';
+  else if(p.state!=='live'&&(p.from||p.until)) t+=' (le date saranno usate quando lo imposti su “Pubblicato”)';
+  $('psum').textContent=t; }
+['ps','pf','pu'].forEach(i=>{ $(i).oninput=psum; $(i).onchange=psum; });
+$('pclr').onclick=()=>{ $('pf').value=''; $('pu').value=''; psum(); };
 $('new').onclick=()=>{ openEd(null,-1); pg.pdfDoc=null; const c=$('pc'); c.width=1; c.height=1; $('pr').style.display='none'; };
 $('canc').onclick=()=>{ $('ed').style.display='none'; };
 function mpv(){ $('mpv').textContent=$('mm0').value.replace(/\{(\w+)\}/g,(x,k)=>({nome:'Maria',cognome:'Rossi',ruolo:'Consulente Finanziaria',ruolo_min:'consulente finanziaria',sito:'mariarossi.consulente.widiba.it',link:'https://mariarossi.consulente.widiba.it/'+$('mp').value}[k]||x)); }
@@ -197,7 +260,16 @@ async function drawPage(){
 $('qp').onchange=drawPage;
 function setBox(x,y,s){ const q=E.m.qr; q.boxX=+x.toFixed(3); q.boxTop=+y.toFixed(3); q.boxSize=+s.toFixed(3); q.modSize=+(s*0.8864).toFixed(3); q.modX=+(x+s*0.0568).toFixed(3); q.modTop=+(y+s*0.0568).toFixed(3); toFields(); }
 function toFields(){ const q=E.m.qr; $('bx').value=q.boxX; $('by').value=q.boxTop; $('bs').value=q.boxSize; const r=$('pr'); r.style.display=q.boxSize>0&&q.boxX+q.boxTop>0?'block':'none';
-  r.style.left=q.boxX/pg.w*100+'%'; r.style.top=q.boxTop/pg.h*100+'%'; r.style.width=q.boxSize/pg.w*100+'%'; r.style.height=q.boxSize/pg.h*100+'%'; }
+  r.style.left=q.boxX/pg.w*100+'%'; r.style.top=q.boxTop/pg.h*100+'%'; r.style.width=q.boxSize/pg.w*100+'%'; r.style.height=q.boxSize/pg.h*100+'%'; centerInfo(); }
+/* centraggio automatico: calcolato sul centro della pagina, non a occhio */
+const SNAP=3; // pt: entro questa distanza dal centro il riquadro si aggancia da solo durante il trascinamento
+const f2=n=>(n>0?'+':'')+n.toFixed(2).replace('.',',');
+function centerInfo(){ if(!E||!pg.pdfDoc) return; const q=E.m.qr;
+  const dx=q.boxX+q.boxSize/2-pg.w/2, dy=q.boxTop+q.boxSize/2-pg.h/2, okx=Math.abs(dx)<0.01, oky=Math.abs(dy)<0.01, show=$('cg').checked&&q.boxSize>0;
+  $('gv').style.display=$('gh').style.display=show?'block':'none'; $('gv').classList.toggle('ok',okx); $('gh').classList.toggle('ok',oky);
+  $('cinfo').innerHTML='Scarto del riquadro dal centro della pagina — orizzontale: '+(okx?'<span class="ok">✓ centrato</span>':f2(dx)+' pt')+' · verticale: '+(oky?'<span class="ok">✓ centrato</span>':f2(dy)+' pt')+' (centro pagina: '+(pg.w/2).toFixed(2).replace('.',',')+' × '+(pg.h/2).toFixed(2).replace('.',',')+' pt)'; }
+const ctr=(h,v)=>{ if(!E||!pg.pdfDoc) return; const q=E.m.qr; if(!(q.boxSize>0)){ L2('Disegna prima il riquadro del QR.'); return; } setBox(h?pg.w/2-q.boxSize/2:q.boxX, v?pg.h/2-q.boxSize/2:q.boxTop, q.boxSize); };
+$('cH').onclick=()=>ctr(true,false); $('cV').onclick=()=>ctr(false,true); $('cB').onclick=()=>ctr(true,true); $('cg').onchange=centerInfo;
 function fromFields(){ const x=+$('bx').value||E.m.qr.boxX, y=+$('by').value||E.m.qr.boxTop, s=+$('bs').value||E.m.qr.boxSize; setBox(x,y,s); }
 ['bx','by','bs'].forEach(i=>$(i).oninput=fromFields);
 let drag=null;
@@ -206,7 +278,9 @@ $('pw').addEventListener('pointerdown',e=>{ if(!pg.pdfDoc) return; const p=ptr(e
   if($('dm').value==='cv'){ E.tmp={x:p.x,top:p.y,w:0,h:0}; renderCovers(); } else setBox(p.x,p.y,1); });
 $('pw').addEventListener('pointermove',e=>{ if(!drag) return; const p=ptr(e);
   if($('dm').value==='cv'){ E.tmp={x:Math.min(p.x,drag.x),top:Math.min(p.y,drag.y),w:Math.abs(p.x-drag.x),h:Math.abs(p.y-drag.y)}; renderCovers(); return; }
-  const s=Math.max(Math.abs(p.x-drag.x),Math.abs(p.y-drag.y),4); setBox(p.x<drag.x?drag.x-s:drag.x,p.y<drag.y?drag.y-s:drag.y,s); });
+  const s=Math.max(Math.abs(p.x-drag.x),Math.abs(p.y-drag.y),4); let x=p.x<drag.x?drag.x-s:drag.x, y=p.y<drag.y?drag.y-s:drag.y;
+  if($('cg').checked){ if(Math.abs(x+s/2-pg.w/2)<SNAP) x=pg.w/2-s/2; if(Math.abs(y+s/2-pg.h/2)<SNAP) y=pg.h/2-s/2; }  // aggancio al centro pagina
+  setBox(x,y,s); });
 $('pw').addEventListener('pointerup',()=>{ if(!drag) return; drag=null;
   if($('dm').value==='cv'){ const t=E.tmp; E.tmp=null; if(t&&t.w>2&&t.h>2){ const c={page:(+$('qp').value||1)-1,x:+t.x.toFixed(2),top:+t.top.toFixed(2),w:+t.w.toFixed(2),h:+t.h.toFixed(2),color:'#FFFFFF'}; c.color=sampleRect(c); E.m.qr.covers.push(c); } renderCovers(); return; }
   autoColors(); });
@@ -231,7 +305,9 @@ $('snap').onclick=()=>{ if(!pg.pdfDoc||!E) return; const q=E.m.qr, ctx=$('pc').g
   const side=Math.max(maxx-minx+1,maxy-miny+1)/k, cx=(x0+(minx+maxx+1)/2)/k, cy=(y0+(miny+maxy+1)/2)/k, box=side;
   setBox(cx-box/2,cy-box/2,box); autoColors(); L2('Riquadro agganciato al QR esistente: controlla con l\u2019anteprima.'); };
 $('cb').oninput=()=>E.m.qr.boxColor=$('cb').value; $('cd').oninput=()=>E.m.qr.dark=$('cd').value;
-function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msgs=[0,1,2].map(i=>({l:$('ml'+i).value.trim(),t:$('mm'+i).value.trim()})).filter(x=>x.t).map((x,i)=>({l:x.l||('Messaggio '+(i+1)),t:x.t})); if(!m.msgs.length) throw new Error('Scrivi almeno un messaggio WhatsApp.'); m.msg=m.msgs[0].t;
+function collect(){ const m=E.m, q=m.qr; m.title=$('mt').value.trim(); m.cat=$('mc').value.trim(); m.page=$('mp').value.trim().replace(/^\/+/,''); m.desc=$('md').value.trim(); m.msgs=[0,1,2].map(i=>({l:$('ml'+i).value.trim(),t:$('mm'+i).value.trim()})).filter(x=>x.t).map((x,i)=>({l:x.l||('Messaggio '+(i+1)),t:x.t}));
+  m.kind=$('mk').value; if(m.kind!=='print' && !m.msgs.length) throw new Error('Scrivi almeno un messaggio WhatsApp.'); m.msg=m.msgs[0]?m.msgs[0].t:'';
+  const pb=pubFromForm(); if(pb.from&&pb.until&&Date.parse(pb.until)<=Date.parse(pb.from)) throw new Error('La data di fine pubblicazione deve essere dopo quella di inizio.'); m.pub=pb;
   q.page=(+$('qp').value||1)-1; q.label={l1:$('l1').value.trim(),addr:$('la').checked,color:$('lc').value,size:+$('ls').value||5.8,gap:+$('lg').value,lead:+$('lh').value||10.5,dx:+$('lx').value||0}; q.boxColor=$('cb').value; q.dark=$('cd').value;
   if(!m.title) throw new Error('Inserisci il titolo.'); if(!m.page) throw new Error('Inserisci il nome pagina.'); if(!(q.boxSize>0)||(q.boxX+q.boxTop)<=0) throw new Error('Disegna il riquadro del QR sul PDF.'); return m; }
 $('prevb').onclick=async()=>{ try{ const m=collect(); const mm=JSON.parse(JSON.stringify(m));
