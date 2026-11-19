@@ -208,8 +208,8 @@
     "cat": "Commerciale",
     "kind": "digital",
     "pub": {
-      "state": "draft",
-      "from": "2026-11-18T23:10:00.000Z",
+      "state": "live",
+      "from": null,
       "until": "2026-12-14T22:59:00.000Z"
     },
     "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nSe conosci qualcuno che vuole mettere a frutto la propria liquidità, c’è una promozione dedicata ai nuovi clienti: *3,5% annuo lordo* sui vincoli a 6 mesi di almeno 5.000 €, aprendo il Conto Widiba Classic entro il 14 dicembre 2026.\n\nI dettagli qui: {link}\n\nSe ti va, ne parliamo insieme.",
