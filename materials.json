@@ -98,58 +98,6 @@
     ]
   },
   {
-    "id": "promo-acquisizione",
-    "title": "Promo acquisizione",
-    "desc": "Iniziativa dedicata all'acquisizione di nuovi clienti!",
-    "cat": "Commerciale",
-    "msg": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nSe conosci qualcuno che vuole mettere a frutto la propria liquidità, c’è una promozione dedicata ai nuovi clienti: *3,5% annuo lordo* sui vincoli a 6 mesi di almeno 5.000 €, aprendo il Conto Widiba Classic entro il 18 novembre 2026.\n\nI dettagli qui: {link}\n\nSe ti va, ne parliamo insieme.",
-    "msgs": [
-      {
-        "l": "Standard",
-        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nSe conosci qualcuno che vuole mettere a frutto la propria liquidità, c’è una promozione dedicata ai nuovi clienti: *3,5% annuo lordo* sui vincoli a 6 mesi di almeno 5.000 €, aprendo il Conto Widiba Classic entro il 18 novembre 2026.\n\nI dettagli qui: {link}\n\nSe ti va, ne parliamo insieme."
-      },
-      {
-        "l": "Conto completo",
-        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nTi presento il Conto Widiba Classic: *canone azzerato per il primo anno* per i nuovi clienti, carta di debito internazionale inclusa, bonifici online gratuiti, PEC e firma digitale incluse, e un’app intuitiva per fare tutto, dappertutto.\n\nAprendolo entro il 18 novembre 2026 puoi avere anche il *3,5% annuo* lordo sui vincoli a 6 mesi (almeno 5.000 €).\n\nScopri tutto qui: {link}"
-      },
-      {
-        "l": "Senso di urgenza",
-        "t": "Ciao! Sono {nome} {cognome}, {ruolo} di Banca Widiba.\n\nUn promemoria: fino al *18 novembre 2026* si può aprire il Conto Widiba Classic con canone azzerato per il primo anno e 3,5% annuo lordo sui vincoli a 6 mesi di almeno 5.000 € (da attivare entro 30 giorni dall’apertura).\n\nSe conosci qualcuno a cui può interessare, puoi girargli questo link: {link}\n\nSono a disposizione per aiutarlo a partire."
-      }
-    ],
-    "page": "blog/scopri-conto-widiba-classic-semplice-evoluto-completo-6c5UK",
-    "qr": {
-      "page": 1,
-      "boxX": 178.555,
-      "boxTop": 440.802,
-      "boxSize": 62.418,
-      "modX": 182.1,
-      "modTop": 444.347,
-      "modSize": 55.327,
-      "boxColor": "#33383c",
-      "dark": "#ffffff",
-      "label": {
-        "l1": "INQUADRA IL QR CODE E VAI AL MIO SITO",
-        "addr": true,
-        "color": "#ffffff",
-        "size": 5.8,
-        "gap": 13,
-        "lead": 10.5,
-        "dx": 0
-      },
-      "covers": []
-    },
-    "file": "Promo_acquisizione",
-    "pdf": "materials/promo-acquisizione.pdf",
-    "thumb": "materials/promo-acquisizione.jpg",
-    "kind": "digital",
-    "pub": {
-      "state": "live",
-      "from": null,
-      "until": "2026-11-18T22:59:00.000Z"
-    }
-  },
-  {
     "id": "brochure-widiba",
     "title": "Brochure Widiba",
     "desc": "Brochure istituzionale, versione stampabile",
